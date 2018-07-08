@@ -15,10 +15,13 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "typeRoots": [
+      "node_modules/@0xproject/typescript-typings/types",
+      "node_modules/@types"
+    ]
   },
   "exclude": [
     "node_modules",

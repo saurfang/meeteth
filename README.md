@@ -18,6 +18,8 @@ Calendar.sol - ERC721 token represents a schedulable calendar. The owner can acc
 
 Reservation.sol - ERC721/ERC809 token represents an ephemeral access to a specific Calendar token.
 
+**No audit has been performed on these contracts. Use of this code in production is strongly discouraged.**
+
 ## Routes
 
 - /meet/:id - schedule a reservation on token with `:id` id

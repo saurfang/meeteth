@@ -2,6 +2,7 @@ require('babel-register')({
   ignore: /node_modules\/(?!openzeppelin-solidity)/
 });
 require('babel-polyfill');
+require('mocha-clean');
 
 module.exports = {
   networks: {
