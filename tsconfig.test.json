@@ -3,7 +3,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "rootDir": ".",
-    "outDir": "build/test"
+    "outDir": "."
   },
   "include": ["./globals.d.ts", "test/**/*.ts"]
 }

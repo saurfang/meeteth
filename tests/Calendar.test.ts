@@ -1,17 +1,18 @@
 import chaiSetup from "./utils/chai_setup";
 import EVMRevert from "./utils/EVMRevert";
+import { CalendarContract, CalendarInstance } from "truffle";
 
-const CalendarContract = artifacts.require("Calendar");
+const Calendar: CalendarContract = artifacts.require("Calendar");
 
 chaiSetup();
 
 contract("Calendar", ([owner, renter1, renter2]) => {
-  let calendar;
+  let calendar: CalendarInstance;
   const nullAddress = "0x0000000000000000000000000000000000000000";
 
   describe("simple cases", () => {
     beforeEach(async () => {
-      calendar = await CalendarContract.new();
+      calendar = await Calendar.new();
       await calendar.mint();
     });
 
@@ -95,7 +96,7 @@ contract("Calendar", ([owner, renter1, renter2]) => {
 
   describe("cancellation", () => {
     before(async () => {
-      calendar = await CalendarContract.new();
+      calendar = await Calendar.new();
       await calendar.mint();
 
       await calendar.reserve(0, 1000, 2000, { from: renter1 });

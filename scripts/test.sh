@@ -6,6 +6,27 @@ set -o errexit
 # Executes cleanup function at script exit.
 trap cleanup EXIT
 
+typescript_test_directory="./tests"
+compiled_test_directory="./test"
+
+remove_compiled_tests() {
+  if [ -d "$compiled_test_directory" ]; then
+    rm -r "$compiled_test_directory"
+  fi
+}
+
+compile_tests() {
+  remove_compiled_tests
+
+  # Copy over files so we include things like mock contracts
+  cp -r "$typescript_test_directory" "$compiled_test_directory"
+
+  # Compile into the test directory
+  node_modules/.bin/tsc -p ./tsconfig.test.json
+}
+
+compile_tests
+
 cleanup() {
   # Kill the ganache instance that we started (if we started one and if it's still running).
   if [ -n "$ganache_pid" ] && ps -p $ganache_pid > /dev/null; then
