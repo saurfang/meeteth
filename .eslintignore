@@ -1,0 +1,3 @@
+truffle-config.js
+migrations/*.js
+coverage/
