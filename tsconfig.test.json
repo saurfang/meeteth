@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "module": "commonjs",
-    "rootDir": ".",
-    "outDir": "."
-  },
-  "include": ["./globals.d.ts", "test/**/*.ts"]
-}
