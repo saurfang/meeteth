@@ -12,16 +12,12 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false, // TODO: vortex needs better typings
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "baseUrl": ".",
-    "typeRoots": [
-      "node_modules/@0xproject/typescript-typings/types",
-      "node_modules/@types"
-    ]
+    "baseUrl": "."
   },
   "exclude": [
     "node_modules",

@@ -1,6 +1,6 @@
+import { CalendarContract, CalendarInstance } from "truffle";
 import chaiSetup from "./utils/chai_setup";
 import EVMRevert from "./utils/EVMRevert";
-import { CalendarContract, CalendarInstance } from "truffle";
 
 const Calendar: CalendarContract = artifacts.require("Calendar");
 

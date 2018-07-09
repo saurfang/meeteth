@@ -1,5 +1,5 @@
 import * as Web3 from "web3";
-import { CalendarContract, CalendarInstance } from "./build/contracts";
+import { CalendarContract, CalendarInstance } from "contracts";
 
 declare global {
   function contract(name: string, test: ContractTest): void;

@@ -1,15 +1,14 @@
 {
-  "extends": [
-    "tslint:recommended",
-    "tslint-react",
-    "@0xproject/tslint-config",
-    "tslint-config-prettier"
-  ],
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
   "linterOptions": {
     "exclude": [
       "config/**/*.js",
       "node_modules/**/*.ts",
-      "build/generated/*.ts"
+      "build/**/*.ts",
+      "generate.ts"
     ]
+  },
+  "rules": {
+    "max-classes-per-file": false
   }
 }

@@ -9,7 +9,7 @@ format_typings() {
 }
 
 update_typings() {
-  compile_typings | format_typings > build/contracts.d.ts
+  compile_typings | format_typings > contracts.d.ts
 }
 
 compile_solidity() {

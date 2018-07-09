@@ -5,12 +5,13 @@ import {
   Route,
   RouteComponentProps,
   Switch,
-  withRouter
+  withRouter,
 } from "react-router-dom";
 
-import Dashboard from "./Dashboard";
-import Manage from "./Manage";
-import Schedule from "./Schedule";
+import Dashboard from "./components/Dashboard";
+import Manage from "./components/Manage";
+import Schedule from "./components/Schedule";
+import VortexApp from "./VortexApp";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./App.scss";
@@ -21,7 +22,7 @@ class App extends React.Component<RouteComponentProps<any>> {
   public render() {
     const breadcrumbNameMap = {
       "/about": "About",
-      "/manage": "My Calendars"
+      "/calendars": "Calendars",
     };
 
     const { location } = this.props;
@@ -40,7 +41,7 @@ class App extends React.Component<RouteComponentProps<any>> {
     const breadcrumbItems = [
       <Breadcrumb.Item key="home">
         <Link to="/">Home</Link>
-      </Breadcrumb.Item>
+      </Breadcrumb.Item>,
     ].concat(extraBreadcrumbItems);
 
     return (
@@ -57,8 +58,8 @@ class App extends React.Component<RouteComponentProps<any>> {
               <Menu.Item key="dashboard">
                 <Link to="/">Dashboard</Link>
               </Menu.Item>
-              <Menu.Item key="manage">
-                <Link to="/manage">My Calendars</Link>
+              <Menu.Item key="calendars">
+                <Link to="/calendars">Calendars</Link>
               </Menu.Item>
               <Menu.Item key="about">
                 <Link to="/about">About</Link>
@@ -69,12 +70,14 @@ class App extends React.Component<RouteComponentProps<any>> {
             <Breadcrumb style={{ margin: "16px 0" }}>
               {breadcrumbItems}
             </Breadcrumb>
-            <div style={{ background: "#fff", padding: 24, minHeight: 280 }}>
-              <Switch>
-                <Route exact={true} path="/" component={Dashboard} />
-                <Route path="/manage" component={Manage} />
-                <Route path="/meet/:id" component={Schedule} />
-              </Switch>
+            <div style={{ background: "#fff", padding: 24, minHeight: 64 }}>
+              <VortexApp>
+                <Switch>
+                  <Route exact={true} path="/" component={Dashboard} />
+                  <Route path="/calendars" component={Manage} />
+                  <Route path="/meet/:id" component={Schedule} />
+                </Switch>
+              </VortexApp>
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
