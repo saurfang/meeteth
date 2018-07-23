@@ -1,6 +1,6 @@
 import { Breadcrumb, Col, Icon, Layout, Menu, Row } from "antd";
 import React from "react";
-import { Link, Route, Switch, withRouter } from "react-router-dom";
+import { Link, Route, Switch, withRouter, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
 import { LoadingContainer } from "drizzle-react-components";
@@ -12,6 +12,7 @@ import styled from "react-emotion";
 import Dashboard from "./components/Dashboard";
 import Manage from "./components/Manage";
 import Schedule from "./components/Schedule";
+import ScheduleCalendarPicker from "./components/Schedule/ScheduleCalendarPicker";
 
 const { Header, Content, Footer } = Layout;
 
@@ -21,18 +22,20 @@ const App = props => {
   const breadcrumbNameMap = {
     "/about": "About",
     "/calendars": "Calendars",
+    "/meet": "Schedule",
   };
 
   const { className, location } = props;
   const pathSnippets = location.pathname.split("/").filter(i => i);
-  // tslint:disable-next-line:no-console
-  console.log(pathSnippets);
   const extraBreadcrumbItems = pathSnippets.map((_, index) => {
     const url = `/${pathSnippets.slice(0, index + 1).join("/")}`;
+    const breadcrumb = breadcrumbNameMap[url];
     return (
-      <Breadcrumb.Item key={url}>
-        <Link to={url}>{breadcrumbNameMap[url]}</Link>
-      </Breadcrumb.Item>
+      breadcrumb && (
+        <Breadcrumb.Item key={url}>
+          <Link to={url}>{breadcrumb}</Link>
+        </Breadcrumb.Item>
+      )
     );
   });
 
@@ -73,8 +76,13 @@ const App = props => {
               <Switch>
                 <Route exact path="/" component={Dashboard} />
                 <Route path="/calendars" component={Manage} />
+                <Route
+                  path="/about"
+                  component={drizzleConnect(DrizzleExamples, mapStateToProps)}
+                />
                 <Route path="/meet/:id" component={Schedule} />
-                <DrizzleExamples {...props} />
+                <Redirect from="/meet" to="/" />
+                <Route path="/:account" component={ScheduleCalendarPicker} />
               </Switch>
             </LoadingContainer>
           </div>

@@ -2,6 +2,7 @@ import { Divider, Button, Row, Col, Card } from "antd";
 import { drizzleConnect } from "drizzle-react";
 import makeBlockie from "ethereum-blockies-base64";
 import React from "react";
+import { Link } from "react-router-dom";
 import { css } from "emotion";
 import PropTypes from "prop-types";
 
@@ -54,8 +55,23 @@ class Manage extends React.Component {
       const { contracts } = state;
       if (contracts) {
         derivedState.dataKeys = {
+          ...derivedState.dataKeys,
           balance: contracts.Calendar.methods.balanceOf.cacheCall(account),
         };
+
+        const balance =
+          props.contracts.Calendar.balanceOf[derivedState.dataKeys.balance];
+        if (balance && balance.value) {
+          derivedState.dataKeys = {
+            ...derivedState.dataKeys,
+            tokenIds: Array.from(Array(+balance.value).keys()).map(i =>
+              contracts.Calendar.methods.tokenOfOwnerByIndex.cacheCall(
+                account,
+                i
+              )
+            ),
+          };
+        }
       }
     }
 
@@ -63,8 +79,9 @@ class Manage extends React.Component {
   }
 
   createCalendar() {
+    const { accounts } = this.props;
     const { contracts } = this.state;
-    contracts.Calendar.methods.mint.cacheSend();
+    contracts.Calendar.methods.mint.cacheSend({ from: accounts[0] });
   }
 
   render() {
@@ -75,10 +92,25 @@ class Manage extends React.Component {
     const balance = contracts.Calendar.balanceOf[dataKeys.balance];
     const myCalendars =
       balance &&
+      !Object.prototype.hasOwnProperty.call(balance, "error") &&
       Array.from(Array(+balance.value).keys()).map(i => {
+        const tokenIdKey =
+          dataKeys.tokenIds &&
+          i < dataKeys.tokenIds.length &&
+          dataKeys.tokenIds[i];
+        const tokenId =
+          tokenIdKey &&
+          contracts.Calendar.tokenOfOwnerByIndex[tokenIdKey] &&
+          contracts.Calendar.tokenOfOwnerByIndex[tokenIdKey].value;
+
         return (
           <div className={styles.card} key={i}>
-            <Card title={`Calendar ${i}`}>Calendar {i}</Card>
+            <Card
+              title={`Calendar ${tokenId || ""}`}
+              loading={tokenId === undefined}
+            >
+              <Link to={`/meet/${tokenId}`}>/meet/{tokenId}</Link>
+            </Card>
           </div>
         );
       });
@@ -94,7 +126,7 @@ class Manage extends React.Component {
                 </div>
                 <div>
                   <h4>{account}</h4>
-                  <a>meeteth.io/meet/{account}</a>
+                  <Link to={`/${account}`}>meeteth.io/{account}</Link>
                 </div>
               </div>
               <div className={styles.create}>
