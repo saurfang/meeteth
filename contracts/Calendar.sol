@@ -61,13 +61,13 @@ contract Calendar is ERC721Token, ERC809 {
 
     uint256 stopTime;
     (found, stopTime, reservationId) = stopTimestampsMap[_tokenId].floorEntry(_stop);
-    if (found && stopTime >= _start) {
+    if (found && stopTime > _start) {
       return false;
     }
 
     uint256 startTime;
     (found, startTime, reservationId) = startTimestampsMap[_tokenId].ceilingEntry(_start);
-    if (found && startTime <= _stop) {
+    if (found && startTime < _stop) {
       return false;
     }
 
@@ -128,6 +128,7 @@ contract Calendar is ERC721Token, ERC809 {
     return cancelled;
   }
 
+  /// @notice Cancel reservation `_reservationId` for calendar `_tokenId`
   function cancel(uint256 _tokenId, uint256 _reservationId)
   public
   {
@@ -148,6 +149,7 @@ contract Calendar is ERC721Token, ERC809 {
     stopTimestamps.remove(stopTime);
   }
 
+  /// @notice Find the owner of the reservation that overlaps `_timestamp` for the calendar `_tokenId`
   function renterOf(uint256 _tokenId, uint256 _timestamp)
   public
   view
@@ -167,6 +169,31 @@ contract Calendar is ERC721Token, ERC809 {
       if (reservation.stopTimestamps(reservationId) >= _timestamp) {
         return reservation.ownerOf(reservationId);
       }
+    }
+  }
+
+  /// @notice Count all reservations for an calendar
+  function reservationBalanceOf(uint256 _tokenId)
+  public
+  view
+  returns (uint256)
+  {
+    return startTimestampsMap[_tokenId].size();
+  }
+
+  /// @notice Get reservation details for an calendar by index
+  function reservationOfCalendarByIndex(uint256 _tokenId, uint256 _index)
+  public
+  view
+  returns (uint256 reservationId, uint256 startTime, uint256 stopTime, address renter)
+  {
+    bool found;
+    (found, startTime, reservationId) = startTimestampsMap[_tokenId].select(_index);
+
+    if (found) {
+      Reservation reservation = Reservation(reservationContract);
+      stopTime = reservation.stopTimestamps(reservationId);
+      renter = reservation.ownerOf(reservationId);
     }
   }
 }

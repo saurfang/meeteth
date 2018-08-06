@@ -1,4 +1,4 @@
-import { Divider, Button, Row, Col, Card, List } from "antd";
+import { Row, Col, List } from "antd";
 import { drizzleConnect } from "drizzle-react";
 import makeBlockie from "ethereum-blockies-base64";
 import React from "react";

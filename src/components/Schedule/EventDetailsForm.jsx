@@ -1,59 +1,99 @@
-import { Row, Col, Form, Input, Icon, Button } from "antd";
+import { Form, Input, Button, DatePicker } from "antd";
+import moment from "moment";
+import { formShape } from "rc-form";
 import React from "react";
+import PropTypes from "prop-types";
 
 const FormItem = Form.Item;
+const { RangePicker } = DatePicker;
 
 class EventDetailsForm extends React.Component {
+  static propTypes = {
+    form: formShape,
+    isUpdating: PropTypes.bool.isRequired,
+    event: PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
+      start: PropTypes.instanceOf(Date),
+      end: PropTypes.instanceOf(Date),
+    }),
+    onFormSubmit: PropTypes.func.isRequired,
+  };
+
+  componentDidMount() {
+    const { isUpdating } = this.props;
+    if (!isUpdating) {
+      this.titleInput.focus();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const {
+      event,
+      form: { resetFields },
+      isUpdating,
+    } = this.props;
+    // reset fields properly
+    if (event !== prevProps.event) {
+      resetFields();
+
+      if (!isUpdating) {
+        this.titleInput.focus();
+      }
+    }
+  }
+
   handleSubmit = e => {
     e.preventDefault();
 
     const {
       form: { validateFields },
+      onFormSubmit,
     } = this.props;
 
-    validateFields((err, values) => {
-      if (!err) {
-        console.log("Received values of form: ", values);
-      }
-    });
+    validateFields(onFormSubmit);
   };
 
   render() {
     const {
       form: { getFieldDecorator },
+      isUpdating,
+      event,
     } = this.props;
     return (
-      <Form onSubmit={this.handleSubmit} className="login-form">
+      <Form onSubmit={this.handleSubmit}>
         <FormItem>
-          {getFieldDecorator("userName", {
-            rules: [{ required: true, message: "Please input your username!" }],
+          {getFieldDecorator("title", {
+            rules: [
+              { required: true, message: "Please input your event title!" },
+            ],
+            initialValue: event.title,
           })(
             <Input
-              prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
-              placeholder="Username"
+              placeholder="Add title"
+              ref={input => {
+                this.titleInput = input;
+              }}
             />
           )}
         </FormItem>
         <FormItem>
-          {getFieldDecorator("password", {
-            rules: [{ required: true, message: "Please input your Password!" }],
-          })(
-            <Input
-              prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
-              type="password"
-              placeholder="Password"
-            />
-          )}
+          {getFieldDecorator("timeRange", {
+            rules: [
+              {
+                type: "array",
+                required: true,
+                message: "Please select your event time!",
+              },
+            ],
+            initialValue: [moment(event.start), moment(event.end)],
+          })(<RangePicker showTime format="YYYY-MM-DD HH:mm" />)}
         </FormItem>
         <FormItem>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-          >
-            Log in
+          {/* TODO: add ability to update event */}
+          <Button type="primary" htmlType="submit" disabled={isUpdating}>
+            {isUpdating ? "Update" : "Create"}
           </Button>
-          Or <a href="">register now!</a>
         </FormItem>
       </Form>
     );
