@@ -1,10 +1,19 @@
 import { Divider, Button, Row, Col, Card } from "antd";
 import { drizzleConnect } from "drizzle-react";
-import makeBlockie from "ethereum-blockies-base64";
 import React from "react";
 import { Link } from "react-router-dom";
 import { css } from "emotion";
 import PropTypes from "prop-types";
+import arrayDiff from "arr-diff";
+
+import {
+  memoizedTokenOfOwnerByIndex,
+  memoizedTokenByIndex,
+  unboxNumeric,
+  getAllTokensByIndex,
+  drawIds,
+  memoizedBlockie,
+} from "../helpers";
 
 const styles = {
   container: css({
@@ -32,14 +41,34 @@ const styles = {
   }),
 };
 
+function CalendarCard({ tokenId }) {
+  return (
+    <div className={styles.card}>
+      <Card title={`Calendar ${tokenId || ""}`} loading={tokenId === null}>
+        <Link to={`/meet/${tokenId}`}>
+          /meet/
+          {tokenId}
+        </Link>
+      </Card>
+    </div>
+  );
+}
+
 class Manage extends React.Component {
   constructor(props, context) {
     super(props);
 
     this.state = {
       blockie: null,
+      balance: null,
       contracts: context.drizzle.contracts,
       dataKeys: {},
+      getCalendarOfOwnerKeys: memoizedTokenOfOwnerByIndex(
+        context.drizzle.contracts.Calendar.methods.tokenOfOwnerByIndex
+      ),
+      getCalendarKeys: memoizedTokenByIndex(
+        context.drizzle.contracts.Calendar.methods.tokenByIndex
+      ),
     };
     this.createCalendar = this.createCalendar.bind(this);
   }
@@ -50,27 +79,34 @@ class Manage extends React.Component {
     const account = props.accounts && props.accounts[0];
 
     if (account) {
-      derivedState.blockie = makeBlockie(account);
+      derivedState.blockie = memoizedBlockie(account);
 
-      const { contracts } = state;
+      const { contracts, getCalendarOfOwnerKeys, getCalendarKeys } = state;
       if (contracts) {
-        derivedState.dataKeys = {
-          ...derivedState.dataKeys,
-          balance: contracts.Calendar.methods.balanceOf.cacheCall(account),
-        };
+        const dataKeys = {};
+        derivedState.dataKeys = dataKeys;
 
-        const balance =
-          props.contracts.Calendar.balanceOf[derivedState.dataKeys.balance];
-        if (balance && balance.value) {
-          derivedState.dataKeys = {
-            ...derivedState.dataKeys,
-            tokenIds: Array.from(Array(+balance.value).keys()).map(i =>
-              contracts.Calendar.methods.tokenOfOwnerByIndex.cacheCall(
-                account,
-                i
-              )
-            ),
-          };
+        dataKeys.balance = contracts.Calendar.methods.balanceOf.cacheCall(
+          account
+        );
+        derivedState.balance = unboxNumeric(
+          props.contracts.Calendar.balanceOf[dataKeys.balance]
+        );
+        if (derivedState.balance) {
+          dataKeys.tokenIds = getCalendarOfOwnerKeys(
+            account,
+            derivedState.balance
+          );
+        }
+
+        dataKeys.totalSupply = contracts.Calendar.methods.totalSupply.cacheCall();
+        derivedState.totalSupply = unboxNumeric(
+          props.contracts.Calendar.totalSupply[dataKeys.totalSupply]
+        );
+        if (derivedState.totalSupply) {
+          dataKeys.sampleTokenIds = getCalendarKeys(
+            drawIds(derivedState.totalSupply - 1, 10, account)
+          );
         }
       }
     }
@@ -89,31 +125,20 @@ class Manage extends React.Component {
     const { blockie, dataKeys } = this.state;
 
     const account = accounts[0];
-    const balance = contracts.Calendar.balanceOf[dataKeys.balance];
-    const myCalendars =
-      balance &&
-      !Object.prototype.hasOwnProperty.call(balance, "error") &&
-      Array.from(Array(+balance.value).keys()).map(i => {
-        const tokenIdKey =
-          dataKeys.tokenIds &&
-          i < dataKeys.tokenIds.length &&
-          dataKeys.tokenIds[i];
-        const tokenId =
-          tokenIdKey &&
-          contracts.Calendar.tokenOfOwnerByIndex[tokenIdKey] &&
-          contracts.Calendar.tokenOfOwnerByIndex[tokenIdKey].value;
-
-        return (
-          <div className={styles.card} key={i}>
-            <Card
-              title={`Calendar ${tokenId || ""}`}
-              loading={tokenId === undefined}
-            >
-              <Link to={`/meet/${tokenId}`}>/meet/{tokenId}</Link>
-            </Card>
-          </div>
-        );
-      });
+    const myCalendarIds = getAllTokensByIndex(
+      dataKeys.tokenIds,
+      contracts.Calendar.tokenOfOwnerByIndex
+    );
+    const myCalendars = myCalendarIds.map((tokenId, i) => (
+      <CalendarCard tokenId={tokenId} key={i} />
+    ));
+    const otherCalendars = arrayDiff(
+      getAllTokensByIndex(
+        dataKeys.sampleTokenIds,
+        contracts.Calendar.tokenByIndex
+      ),
+      myCalendarIds
+    ).map((tokenId, i) => <CalendarCard tokenId={tokenId} key={i} />);
 
     return (
       <div>
@@ -126,7 +151,10 @@ class Manage extends React.Component {
                 </div>
                 <div>
                   <h4>{account}</h4>
-                  <Link to={`/${account}`}>meeteth.io/{account}</Link>
+                  <Link to={`/${account}`}>
+                    meeteth.io/
+                    {account}
+                  </Link>
                 </div>
               </div>
               <div className={styles.create}>
@@ -139,7 +167,12 @@ class Manage extends React.Component {
         </Row>
         <Divider>My Calendars</Divider>
         <div className={styles.cardContainer}>{myCalendars}</div>
-        <Divider>Other Calendars</Divider>
+        {otherCalendars.length > 0 && (
+          <div>
+            <Divider>Other Calendars</Divider>
+            <div className={styles.cardContainer}>{otherCalendars}</div>
+          </div>
+        )}
       </div>
     );
   }

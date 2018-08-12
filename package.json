@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "antd": "^3.6.4",
+    "arr-diff": "^4.0.0",
     "cooltilities": "^1.0.0",
     "drizzle": "^1.2.2",
     "drizzle-react": "^1.1.1",
@@ -17,6 +18,7 @@
     "moment": "^2.22.2",
     "parameterize": "^0.1.0",
     "prop-types": "^15.6.2",
+    "random": "^2.0.12",
     "react": "^16.3.2",
     "react-big-calendar": "^0.19.1",
     "react-dom": "^16.3.2",
@@ -32,6 +34,7 @@
     "redux-promise-middleware": "^5.1.1",
     "redux-saga": "^0.16.0",
     "redux-thunk": "^2.2.0",
+    "seedrandom": "^2.4.3",
     "truffle-contract": "^3.0.5",
     "web3": "^1.0.0-beta.35"
   },

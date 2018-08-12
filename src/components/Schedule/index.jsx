@@ -6,9 +6,13 @@ import BigCalendar from "react-big-calendar";
 import ReactRouterPropTypes from "react-router-prop-types";
 import PropTypes from "prop-types";
 import equal from "fast-deep-equal";
-import memoize from "fast-memoize";
 
 import EventDetailsForm from "./EventDetailsForm";
+import {
+  memoizedTokenOfOwnerByIndex,
+  unboxNumeric,
+  getAllTokensByIndex,
+} from "../helpers";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
@@ -25,30 +29,12 @@ class Schedule extends React.Component {
     super(props);
 
     this.state = {
-      events: [
-        {
-          id: 0,
-          title: "Lunch",
-          start: moment()
-            .add(7, "hours")
-            .toDate(),
-          end: moment()
-            .add(8, "hours")
-            .toDate(),
-          desc: "Power lunch",
-        },
-      ],
+      events: [],
       newEvent: null,
       selectedEvent: null,
       contracts: context.drizzle.contracts,
-      dataKeys: {},
-      reservationKeys: memoize((id, balance) =>
-        Array.from(Array(balance).keys()).map(i =>
-          context.drizzle.contracts.Calendar.methods.reservationOfCalendarByIndex.cacheCall(
-            id,
-            i
-          )
-        )
+      getReservationKeys: memoizedTokenOfOwnerByIndex(
+        context.drizzle.contracts.Calendar.methods.reservationOfCalendarByIndex
       ),
     };
 
@@ -122,43 +108,21 @@ class Schedule extends React.Component {
       },
     } = props;
 
-    const { contracts, reservationKeys } = state;
+    const { contracts, getReservationKeys } = state;
     if (contracts) {
-      derivedState.dataKeys = {
-        ...derivedState.dataKeys,
-        balance: contracts.Calendar.methods.reservationBalanceOf.cacheCall(id),
-      };
+      const balanceKey = contracts.Calendar.methods.reservationBalanceOf.cacheCall(
+        id
+      );
 
-      const balance =
-        props.contracts.Calendar.reservationBalanceOf[
-          derivedState.dataKeys.balance
-        ];
-      derivedState.balance =
-        (balance &&
-          !Object.prototype.hasOwnProperty.call(balance, "error") &&
-          +balance.value) ||
-        0;
+      derivedState.balance = unboxNumeric(
+        props.contracts.Calendar.reservationBalanceOf[balanceKey]
+      );
       if (derivedState.balance) {
-        derivedState.dataKeys = {
-          ...derivedState.dataKeys,
-          reservations: reservationKeys(id, derivedState.balance),
-        };
-        derivedState.reservations =
-          derivedState.balance &&
-          Array.from(Array(derivedState.balance).keys())
-            .map(i => {
-              const reservationKey =
-                derivedState.dataKeys.reservations &&
-                i < derivedState.dataKeys.reservations.length &&
-                derivedState.dataKeys.reservations[i];
-              const { reservationOfCalendarByIndex } = props.contracts.Calendar;
-              const reservation =
-                reservationKey &&
-                reservationOfCalendarByIndex[reservationKey] &&
-                reservationOfCalendarByIndex[reservationKey].value;
-              return reservation;
-            })
-            .filter(x => x);
+        const reservationKeys = getReservationKeys(id, derivedState.balance);
+        derivedState.reservations = getAllTokensByIndex(
+          reservationKeys,
+          props.contracts.Calendar.reservationOfCalendarByIndex
+        ).filter(x => x);
 
         if (
           derivedState.reservations &&
