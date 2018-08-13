@@ -23,7 +23,7 @@ class EventDetailsForm extends React.Component {
   componentDidMount() {
     const { isUpdating } = this.props;
     if (!isUpdating) {
-      this.titleInput.focus();
+      // this.titleInput.focus();
     }
   }
 
@@ -38,7 +38,7 @@ class EventDetailsForm extends React.Component {
       resetFields();
 
       if (!isUpdating) {
-        this.titleInput.focus();
+        // this.titleInput.focus();
       }
     }
   }
@@ -62,7 +62,7 @@ class EventDetailsForm extends React.Component {
     } = this.props;
     return (
       <Form onSubmit={this.handleSubmit}>
-        <FormItem>
+        {/* <FormItem>
           {getFieldDecorator("title", {
             rules: [
               { required: true, message: "Please input your event title!" },
@@ -76,7 +76,7 @@ class EventDetailsForm extends React.Component {
               }}
             />
           )}
-        </FormItem>
+        </FormItem> */}
         <FormItem>
           {getFieldDecorator("timeRange", {
             rules: [
@@ -88,6 +88,12 @@ class EventDetailsForm extends React.Component {
             ],
             initialValue: [moment(event.start), moment(event.end)],
           })(<RangePicker showTime format="YYYY-MM-DD HH:mm" />)}
+        </FormItem>
+        <FormItem label="Owner">
+          {getFieldDecorator("owner", {
+            rules: [],
+            initialValue: event.owner,
+          })(<Input disabled />)}
         </FormItem>
         <FormItem>
           {/* TODO: add ability to update event */}

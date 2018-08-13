@@ -6,6 +6,10 @@ import BigCalendar from "react-big-calendar";
 import ReactRouterPropTypes from "react-router-prop-types";
 import PropTypes from "prop-types";
 import equal from "fast-deep-equal";
+import chroma from "chroma-js";
+import murmurhash from "murmurhash";
+import memoize from "fast-memoize";
+import { Redirect } from "react-router";
 
 import EventDetailsForm from "./EventDetailsForm";
 import {
@@ -21,6 +25,25 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
 
 class Schedule extends React.Component {
+  static eventStyleGetter(event, start, end, isSelected) {
+    const colors = chroma.brewer.Set3;
+    const backgroundColor =
+      colors[Math.abs(murmurhash.v3(event.owner)) % colors.length];
+    const style = {
+      backgroundColor: isSelected
+        ? chroma.darken(backgroundColor)
+        : backgroundColor,
+      // borderRadius: "0px",
+      // opacity: 0.8,
+      color: "black",
+      // border: "1px",
+      // display: "block",
+    };
+    return {
+      style,
+    };
+  }
+
   static propTypes = {
     match: ReactRouterPropTypes.match.isRequired,
   };
@@ -28,14 +51,27 @@ class Schedule extends React.Component {
   constructor(props, context) {
     super(props);
 
+    const { Calendar } = context.drizzle.contracts;
+
     this.state = {
       events: [],
+      exists: null,
+      owner: null,
       newEvent: null,
       selectedEvent: null,
       contracts: context.drizzle.contracts,
       getReservationKeys: memoizedTokenOfOwnerByIndex(
-        context.drizzle.contracts.Calendar.methods.reservationOfCalendarByIndex
+        Calendar.methods.reservationOfCalendarByIndex
       ),
+      memoizedCacheCalls: {
+        Calendar: {
+          exists: memoize(Calendar.methods.exists.cacheCall),
+          ownerOf: memoize(Calendar.methods.ownerOf.cacheCall),
+          reservationBalanceOf: memoize(
+            Calendar.methods.reservationBalanceOf.cacheCall
+          ),
+        },
+      },
     };
 
     this.onSelectEvent = this.onSelectEvent.bind(this);
@@ -44,11 +80,12 @@ class Schedule extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { events, newEvent, selectedEvent } = this.state;
+    const { events, newEvent, selectedEvent, owner } = this.state;
     const update =
       !equal(events, nextState.events) ||
       !equal(newEvent, nextState.newEvent) ||
-      !equal(selectedEvent, nextState.selectedEvent);
+      !equal(selectedEvent, nextState.selectedEvent) ||
+      !equal(owner, nextState.owner);
 
     if (update) console.log(update);
     return update;
@@ -65,11 +102,13 @@ class Schedule extends React.Component {
   }
 
   onSelectSlot(slotInfo) {
+    const { accounts } = this.props;
     const { newEvent } = this.state;
     const event = {
       id: -1,
       isSelected: true,
       title: newEvent && newEvent.title,
+      owner: accounts[0],
       ...slotInfo,
     };
     this.setState({
@@ -92,8 +131,12 @@ class Schedule extends React.Component {
 
       contracts.Calendar.methods.reserve.cacheSend(
         id,
-        values.timeRange[0].utc().valueOf(),
-        values.timeRange[1].utc().valueOf(),
+        moment(values.timeRange[0])
+          .utc()
+          .valueOf(),
+        moment(values.timeRange[1])
+          .utc()
+          .valueOf(),
         { from: accounts[0] }
       );
     }
@@ -108,11 +151,15 @@ class Schedule extends React.Component {
       },
     } = props;
 
-    const { contracts, getReservationKeys } = state;
+    const { contracts, getReservationKeys, memoizedCacheCalls } = state;
     if (contracts) {
-      const balanceKey = contracts.Calendar.methods.reservationBalanceOf.cacheCall(
-        id
-      );
+      const existsKey = memoizedCacheCalls.Calendar.exists(id);
+      derivedState.exists = props.contracts.Calendar.ownerOf[existsKey];
+
+      const ownerKey = memoizedCacheCalls.Calendar.ownerOf(id);
+      derivedState.owner = props.contracts.Calendar.ownerOf[ownerKey];
+
+      const balanceKey = memoizedCacheCalls.Calendar.reservationBalanceOf(id);
 
       derivedState.balance = unboxNumeric(
         props.contracts.Calendar.reservationBalanceOf[balanceKey]
@@ -129,9 +176,9 @@ class Schedule extends React.Component {
           !equal(state.reservations, derivedState.reservations)
         ) {
           derivedState.events = derivedState.reservations.map(
-            ({ reservationId, renter, startTime, stopTime }) => ({
+            ({ reservationId, owner, startTime, stopTime }) => ({
               id: +reservationId,
-              title: renter,
+              owner,
               start: moment(+startTime).toDate(),
               end: moment(+stopTime).toDate(),
             })
@@ -144,31 +191,45 @@ class Schedule extends React.Component {
   }
 
   render() {
-    const { events, newEvent, selectedEvent } = this.state;
+    const {
+      match: {
+        params: { id },
+      },
+    } = this.props;
+    const { events, newEvent, selectedEvent, owner, exists } = this.state;
+
+    if (exists && !exists.value) {
+      return <Redirect to="/" />;
+    }
 
     return (
-      <Row gutter={16}>
-        <Col span={16}>
-          <BigCalendar
-            selectable
-            events={[...events, newEvent]}
-            defaultView="week"
-            scrollToTime={new Date(1970, 1, 1, 6)}
-            defaultDate={new Date()}
-            onSelectEvent={this.onSelectEvent}
-            onSelectSlot={this.onSelectSlot}
-          />
-        </Col>
-        <Col span={8}>
-          {selectedEvent && (
-            <EventDetailsForm
-              isUpdating={newEvent === null}
-              event={selectedEvent}
-              onFormSubmit={this.onEventSubmit}
+      <div>
+        <h2>Calendar {id}</h2>
+        {owner && owner.value && <p>Owner: {owner.value}</p>}
+        <Row gutter={16}>
+          <Col span={16}>
+            <BigCalendar
+              selectable
+              events={[...events, newEvent]}
+              defaultView="week"
+              scrollToTime={new Date(1970, 1, 1, 6)}
+              defaultDate={new Date()}
+              onSelectEvent={this.onSelectEvent}
+              onSelectSlot={this.onSelectSlot}
+              eventPropGetter={Schedule.eventStyleGetter}
             />
-          )}
-        </Col>
-      </Row>
+          </Col>
+          <Col span={8}>
+            {selectedEvent && (
+              <EventDetailsForm
+                isUpdating={newEvent === null}
+                event={selectedEvent}
+                onFormSubmit={this.onEventSubmit}
+              />
+            )}
+          </Col>
+        </Row>
+      </div>
     );
   }
 }

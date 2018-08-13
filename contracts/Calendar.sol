@@ -61,8 +61,10 @@ contract Calendar is ERC721Token, ERC809 {
 
     uint256 stopTime;
     (found, stopTime, reservationId) = stopTimestampsMap[_tokenId].floorEntry(_stop);
-    if (found && stopTime > _start) {
-      return false;
+    if (found) {
+      if (stopTime > _start) {
+        return false;
+      }
     }
 
     uint256 startTime;
@@ -81,6 +83,8 @@ contract Calendar is ERC721Token, ERC809 {
   public
   returns(uint256)
   {
+    require(exists(_tokenId));
+
     if (!isAvailable(_tokenId, _start, _stop)) {
       revert("Token is unavailable during this time period");
     }
@@ -99,6 +103,8 @@ contract Calendar is ERC721Token, ERC809 {
   public
   returns (uint256)
   {
+    require(exists(_tokenId));
+
     // TODO: implement iterator in TreeMap for more efficient batch removal
     TreeMap.Map storage startTimestamps = startTimestampsMap[_tokenId];
     TreeMap.Map storage stopTimestamps = stopTimestampsMap[_tokenId];
@@ -132,6 +138,8 @@ contract Calendar is ERC721Token, ERC809 {
   function cancel(uint256 _tokenId, uint256 _reservationId)
   public
   {
+    require(exists(_tokenId));
+
     Reservation reservation = Reservation(reservationContract);
 
     uint256 startTime = reservation.startTimestamps(_reservationId);
@@ -181,11 +189,11 @@ contract Calendar is ERC721Token, ERC809 {
     return startTimestampsMap[_tokenId].size();
   }
 
-  /// @notice Get reservation details for an calendar by index
+  /// @notice Get reservation details for a calendar by index
   function reservationOfCalendarByIndex(uint256 _tokenId, uint256 _index)
   public
   view
-  returns (uint256 reservationId, uint256 startTime, uint256 stopTime, address renter)
+  returns (uint256 reservationId, uint256 startTime, uint256 stopTime, address owner)
   {
     bool found;
     (found, startTime, reservationId) = startTimestampsMap[_tokenId].select(_index);
@@ -193,7 +201,7 @@ contract Calendar is ERC721Token, ERC809 {
     if (found) {
       Reservation reservation = Reservation(reservationContract);
       stopTime = reservation.stopTimestamps(reservationId);
-      renter = reservation.ownerOf(reservationId);
+      owner = reservation.ownerOf(reservationId);
     }
   }
 }

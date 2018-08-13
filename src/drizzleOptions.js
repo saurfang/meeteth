@@ -18,7 +18,7 @@ const drizzleOptions = {
     Reservation: ["Transfer", "Creation", "Cancellation"],
   },
   polls: {
-    accounts: 1500,
+    accounts: 2000,
   },
 };
 
