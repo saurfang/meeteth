@@ -11,7 +11,6 @@ contract Calendar is ERC721Token, ERC809 {
 
   // mapping of token(calendar) id to mapping from start/end timestamp of a reservation to its id
   mapping(uint256 => TreeMap.Map) public startTimestampsMap;
-  mapping(uint256 => TreeMap.Map) public stopTimestampsMap;
 
   // address of the ERC721 contract tokenizing reseravation/access of this contract's token
   address public reservationContract;
@@ -56,21 +55,24 @@ contract Calendar is ERC721Token, ERC809 {
   view
   returns(bool)
   {
+
     bool found;
     uint256 reservationId;
+    uint256 startTime;
 
-    uint256 stopTime;
-    (found, stopTime, reservationId) = stopTimestampsMap[_tokenId].floorEntry(_stop);
-    if (found) {
-      if (stopTime > _start) {
-        return false;
-      }
+    // find closest event that started after _start
+    (found, startTime, reservationId) = startTimestampsMap[_tokenId].ceilingEntry(_start);
+    if (found && _stop > startTime) {
+      return false;
     }
 
-    uint256 startTime;
-    (found, startTime, reservationId) = startTimestampsMap[_tokenId].ceilingEntry(_start);
-    if (found && startTime < _stop) {
-      return false;
+    // find closest event that started before _start
+    (found, startTime, reservationId) = startTimestampsMap[_tokenId].floorEntry(_start);
+    if (found) {
+      Reservation reservation = Reservation(reservationContract);
+      if (reservation.stopTimestamps(reservationId) > _start) {
+        return false;
+      }
     }
 
     return true;
@@ -92,7 +94,6 @@ contract Calendar is ERC721Token, ERC809 {
     Reservation reservation = Reservation(reservationContract);
     uint256 reservationId = reservation.reserve(msg.sender, _tokenId, _start, _stop);
     startTimestampsMap[_tokenId].put(_start, reservationId);
-    stopTimestampsMap[_tokenId].put(_stop, reservationId);
 
     return reservationId;
   }
@@ -107,7 +108,6 @@ contract Calendar is ERC721Token, ERC809 {
 
     // TODO: implement iterator in TreeMap for more efficient batch removal
     TreeMap.Map storage startTimestamps = startTimestampsMap[_tokenId];
-    TreeMap.Map storage stopTimestamps = stopTimestampsMap[_tokenId];
     Reservation reservation = Reservation(reservationContract);
 
     bool found = true;
@@ -123,7 +123,6 @@ contract Calendar is ERC721Token, ERC809 {
       if (stopTime <= _stop && reservation.ownerOf(reservationId) == msg.sender) {
         reservation.cancel(msg.sender, reservationId);
         startTimestamps.remove(startTime);
-        stopTimestamps.remove(stopTime);
 
         cancelled++;
       }
@@ -152,9 +151,7 @@ contract Calendar is ERC721Token, ERC809 {
     reservation.cancel(msg.sender, _reservationId);
 
     TreeMap.Map storage startTimestamps = startTimestampsMap[_tokenId];
-    TreeMap.Map storage stopTimestamps = stopTimestampsMap[_tokenId];
     startTimestamps.remove(startTime);
-    stopTimestamps.remove(stopTime);
   }
 
   /// @notice Find the owner of the reservation that overlaps `_timestamp` for the calendar `_tokenId`
