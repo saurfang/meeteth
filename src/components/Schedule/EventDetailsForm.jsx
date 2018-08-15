@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
-class EventDetailsForm extends React.PureComponent {
+class EventDetailsForm extends React.Component {
   static propTypes = {
     form: formShape,
     isUpdating: PropTypes.bool.isRequired,

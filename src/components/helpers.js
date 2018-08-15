@@ -40,6 +40,14 @@ export function getAllTokensByIndex(cachedKeys, tokenByIndexFunc) {
   return [];
 }
 
+export function unbox(boxed) {
+  return (
+    boxed &&
+    !Object.prototype.hasOwnProperty.call(boxed, "error") &&
+    boxed.value
+  );
+}
+
 export function unboxNumeric(boxedNumeric) {
   return (
     (boxedNumeric &&

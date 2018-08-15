@@ -8,13 +8,15 @@ import PropTypes from "prop-types";
 import equal from "fast-deep-equal";
 import chroma from "chroma-js";
 import murmurhash from "murmurhash";
-import memoize from "fast-memoize";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
+import { pure } from "recompose";
+import memoize from "fast-memoize";
 
 import EventDetailsForm from "./EventDetailsForm";
 import {
   memoizedTokenOfOwnerByIndex,
+  unbox,
   unboxNumeric,
   getAllTokensByIndex,
 } from "../helpers";
@@ -25,6 +27,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 // to the correct localizer.
 BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
 
+const LazyBigCalendar = pure(BigCalendar);
 class Schedule extends React.Component {
   static eventStyleGetter(event, start, end, isSelected) {
     const colors = chroma.brewer.Set3;
@@ -58,44 +61,56 @@ class Schedule extends React.Component {
   constructor(props, context) {
     super(props);
 
-    const { Calendar } = context.drizzle.contracts;
-
     this.state = {
+      reservations: [],
       events: [],
-      exists: null,
-      owner: null,
       newEvent: null,
       selectedEvent: null,
       contracts: context.drizzle.contracts,
-      getReservationKeys: memoizedTokenOfOwnerByIndex(
-        Calendar.methods.reservationOfCalendarByIndex
-      ),
-      memoizedCacheCalls: {
-        Calendar: {
-          exists: memoize(Calendar.methods.exists.cacheCall),
-          ownerOf: memoize(Calendar.methods.ownerOf.cacheCall),
-          reservationBalanceOf: memoize(
-            Calendar.methods.reservationBalanceOf.cacheCall
-          ),
-        },
-      },
     };
+    this.today = new Date();
+    this.dataKeys = {};
+
+    this.getReservationKeys = memoizedTokenOfOwnerByIndex(
+      context.drizzle.contracts.Calendar.methods.reservationOfCalendarByIndex
+    );
+    this.getEvents = memoize((events, newEvent) => [...events, newEvent]);
 
     this.onSelectEvent = this.onSelectEvent.bind(this);
     this.onSelectSlot = this.onSelectSlot.bind(this);
     this.onEventSubmit = this.onEventSubmit.bind(this);
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const { events, newEvent, selectedEvent, owner } = this.state;
-    const update =
-      !equal(events, nextState.events) ||
-      !equal(newEvent, nextState.newEvent) ||
-      !equal(selectedEvent, nextState.selectedEvent) ||
-      !equal(owner, nextState.owner);
+  componentDidMount() {
+    const {
+      match: {
+        params: { id },
+      },
+    } = this.props;
+    const { contracts } = this.state;
 
-    if (update) console.log(update);
-    return update;
+    this.dataKeys.existsKey = contracts.Calendar.methods.exists.cacheCall(id);
+    this.dataKeys.ownerKey = contracts.Calendar.methods.ownerOf.cacheCall(id);
+    this.dataKeys.balanceKey = contracts.Calendar.methods.reservationBalanceOf.cacheCall(
+      id
+    );
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const {
+      match: {
+        params: { id },
+      },
+      contracts,
+    } = this.props;
+
+    const balance = unboxNumeric(
+      contracts.Calendar.reservationBalanceOf[this.dataKeys.balanceKey]
+    );
+    if (balance) {
+      this.dataKeys.reservationKeys = this.getReservationKeys(id, balance);
+      this.updateEvents();
+    }
   }
 
   onSelectEvent(event) {
@@ -113,7 +128,6 @@ class Schedule extends React.Component {
     const { newEvent } = this.state;
     const event = {
       id: -1,
-      isSelected: true,
       title: newEvent && newEvent.title,
       owner: accounts[0],
       ...slotInfo,
@@ -149,52 +163,36 @@ class Schedule extends React.Component {
     }
   }
 
-  static getDerivedStateFromProps(props, state) {
-    const derivedState = {};
+  calendarNonExists() {
+    const { contracts } = this.props;
+    const { existsKey } = this.dataKeys;
+    return existsKey && unbox(contracts.Calendar.exists[existsKey]) === false;
+  }
 
-    const {
-      match: {
-        params: { id },
-      },
-    } = props;
+  updateEvents() {
+    const { contracts } = this.props;
+    const { reservations: currentReservations } = this.state;
 
-    const { contracts, getReservationKeys, memoizedCacheCalls } = state;
-    if (contracts) {
-      const existsKey = memoizedCacheCalls.Calendar.exists(id);
-      derivedState.exists = props.contracts.Calendar.ownerOf[existsKey];
+    const reservations = getAllTokensByIndex(
+      this.dataKeys.reservationKeys,
+      contracts.Calendar.reservationOfCalendarByIndex
+    ).filter(x => x);
 
-      const ownerKey = memoizedCacheCalls.Calendar.ownerOf(id);
-      derivedState.owner = props.contracts.Calendar.ownerOf[ownerKey];
-
-      const balanceKey = memoizedCacheCalls.Calendar.reservationBalanceOf(id);
-
-      derivedState.balance = unboxNumeric(
-        props.contracts.Calendar.reservationBalanceOf[balanceKey]
+    if (reservations && !equal(currentReservations, reservations)) {
+      const events = reservations.map(
+        ({ reservationId, owner, startTime, stopTime }) => ({
+          id: +reservationId,
+          title: `Reserved for ${owner}`,
+          owner,
+          start: moment(+startTime).toDate(),
+          end: moment(+stopTime).toDate(),
+        })
       );
-      if (derivedState.balance) {
-        const reservationKeys = getReservationKeys(id, derivedState.balance);
-        derivedState.reservations = getAllTokensByIndex(
-          reservationKeys,
-          props.contracts.Calendar.reservationOfCalendarByIndex
-        ).filter(x => x);
-
-        if (
-          derivedState.reservations &&
-          !equal(state.reservations, derivedState.reservations)
-        ) {
-          derivedState.events = derivedState.reservations.map(
-            ({ reservationId, owner, startTime, stopTime }) => ({
-              id: +reservationId,
-              owner,
-              start: moment(+startTime).toDate(),
-              end: moment(+stopTime).toDate(),
-            })
-          );
-        }
-      }
+      this.setState({
+        reservations,
+        events,
+      });
     }
-
-    return derivedState;
   }
 
   render() {
@@ -202,30 +200,32 @@ class Schedule extends React.Component {
       match: {
         params: { id },
       },
+      contracts,
     } = this.props;
-    const { events, newEvent, selectedEvent, owner, exists } = this.state;
+    const { events, newEvent, selectedEvent } = this.state;
 
-    if (exists && !exists.value) {
+    const owner = unbox(contracts.Calendar.ownerOf[this.dataKeys.ownerKey]);
+
+    if (this.calendarNonExists()) {
       return <Redirect to="/" />;
     }
 
     return (
       <div>
         <h2>Calendar {id}</h2>
-        {owner &&
-          owner.value && (
-            <h5>
-              Owner: <Link to={`/${owner.value}`}>{owner.value}</Link>
-            </h5>
-          )}
+        {owner && (
+          <h5>
+            Owner: <Link to={`/${owner}`}>{owner}</Link>
+          </h5>
+        )}
         <Row gutter={16}>
           <Col span={16}>
-            <BigCalendar
+            <LazyBigCalendar
               selectable
-              events={[...events, newEvent]}
+              events={this.getEvents(events, newEvent)}
+              selected={selectedEvent}
               defaultView="week"
-              scrollToTime={new Date(1970, 1, 1, 6)}
-              defaultDate={new Date()}
+              defaultDate={this.today}
               onSelectEvent={this.onSelectEvent}
               onSelectSlot={this.onSelectSlot}
               eventPropGetter={Schedule.eventStyleGetter}
