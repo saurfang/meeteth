@@ -2,9 +2,7 @@ import { Breadcrumb, Col, Icon, Layout, Menu, Row } from "antd";
 import React from "react";
 import { Link, Route, Switch, withRouter, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
-import { drizzleConnect } from "drizzle-react";
 import { LoadingContainer } from "drizzle-react-components";
-import DrizzleExamples from "components/DrizzleExamples";
 import styled from "react-emotion";
 
 import Dashboard from "./components/Dashboard";
@@ -61,7 +59,13 @@ const App = props => {
               <Link to="/calendars">Calendars</Link>
             </Menu.Item>
             <Menu.Item key="about">
-              <Link to="/about">About</Link>
+              <a
+                href="https://medium.com/@saurfang"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                About
+              </a>
             </Menu.Item>
           </Menu>
         </Header>
@@ -74,10 +78,6 @@ const App = props => {
               <Switch>
                 <Route exact path="/" component={Dashboard} />
                 <Route path="/calendars" component={Manage} />
-                <Route
-                  path="/about"
-                  component={drizzleConnect(DrizzleExamples, mapStateToProps)}
-                />
                 <Route path="/meet/:id" component={Schedule} />
                 <Redirect from="/meet" to="/" />
                 <Route path="/:account" component={ScheduleCalendarPicker} />
@@ -89,11 +89,29 @@ const App = props => {
           <Row>
             <Col span={8}>
               MeetETH: Proof of Concept of{" "}
-              <a href="https://github.com/ethereum/EIPs/issues/809">ERC809</a>
+              <a
+                href="https://github.com/ethereum/EIPs/issues/809"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ERC809
+              </a>
+              /
+              <a
+                href="https://github.com/ethereum/EIPs/issues/1201"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ERC1201
+              </a>
             </Col>
             <Col span={8} />
             <Col span={8}>
-              <a href="https://github.com/saurfang/meeteth">
+              <a
+                href="https://github.com/saurfang/meeteth"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Icon type="github" /> github
               </a>
             </Col>
@@ -107,7 +125,5 @@ const App = props => {
 App.propTypes = {
   className: PropTypes.string.isRequired,
 };
-
-const mapStateToProps = state => ({ ...state });
 
 export default styled(withRouter(App))(styles);
