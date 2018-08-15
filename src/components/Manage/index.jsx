@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 import { css } from "emotion";
 import PropTypes from "prop-types";
 import arrayDiff from "arr-diff";
+import equal from "fast-deep-equal";
+import { pure } from "recompose";
+import makeBlockie from "ethereum-blockies-base64";
 
 import {
   memoizedTokenOfOwnerByIndex,
@@ -12,7 +15,6 @@ import {
   unboxNumeric,
   getAllTokensByIndex,
   drawIds,
-  memoizedBlockie,
 } from "../helpers";
 
 const styles = {
@@ -41,28 +43,40 @@ const styles = {
   }),
 };
 
-function CalendarCard({ tokenId }) {
-  return (
-    <div className={styles.card}>
-      <Card title={`Calendar ${tokenId || ""}`} loading={tokenId === null}>
-        <Link to={`/meet/${tokenId}`}>
-          /meet/
-          {tokenId}
-        </Link>
-      </Card>
+const CalendarCard = pure(({ tokenId }) => (
+  <div className={styles.card}>
+    <Card title={`Calendar ${tokenId || ""}`} loading={tokenId === null}>
+      <Link to={`/meet/${tokenId}`}>
+        /meet/
+        {tokenId}
+      </Link>
+    </Card>
+  </div>
+));
+
+const AccountHeader = pure(({ account }) => (
+  <div className={styles.account}>
+    <div>
+      <img src={makeBlockie(account)} alt={account} />
     </div>
-  );
-}
+    <div>
+      <h4>{account}</h4>
+      <Link to={`/${account}`}>
+        meeteth.io/
+        {account}
+      </Link>
+    </div>
+  </div>
+));
 
 class Manage extends React.Component {
   constructor(props, context) {
     super(props);
 
+    this.dataKeys = {};
+
     this.state = {
-      blockie: null,
-      balance: null,
       contracts: context.drizzle.contracts,
-      dataKeys: {},
       getCalendarOfOwnerKeys: memoizedTokenOfOwnerByIndex(
         context.drizzle.contracts.Calendar.methods.tokenOfOwnerByIndex
       ),
@@ -73,45 +87,46 @@ class Manage extends React.Component {
     this.createCalendar = this.createCalendar.bind(this);
   }
 
-  static getDerivedStateFromProps(props, state) {
-    const derivedState = {};
+  componentDidMount() {
+    this.resetAccount();
+  }
 
-    const account = props.accounts && props.accounts[0];
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { accounts, contracts } = this.props;
+    const { getCalendarOfOwnerKeys, getCalendarKeys } = this.state;
+    const account = accounts && accounts[0];
 
-    if (account) {
-      derivedState.blockie = memoizedBlockie(account);
+    if (!equal(accounts, prevProps.accounts)) {
+      this.resetAccount();
+    } else if (account) {
+      const balance = unboxNumeric(
+        contracts.Calendar.balanceOf[this.dataKeys.balance]
+      );
+      if (balance) {
+        this.dataKeys.tokenIds = getCalendarOfOwnerKeys(account, balance);
+      }
 
-      const { contracts, getCalendarOfOwnerKeys, getCalendarKeys } = state;
-      if (contracts) {
-        const dataKeys = {};
-        derivedState.dataKeys = dataKeys;
-
-        dataKeys.balance = contracts.Calendar.methods.balanceOf.cacheCall(
-          account
+      const totalSupply = unboxNumeric(
+        contracts.Calendar.totalSupply[this.dataKeys.totalSupply]
+      );
+      if (totalSupply) {
+        this.dataKeys.sampleTokenIds = getCalendarKeys(
+          drawIds(totalSupply - 1, 10, account)
         );
-        derivedState.balance = unboxNumeric(
-          props.contracts.Calendar.balanceOf[dataKeys.balance]
-        );
-        if (derivedState.balance) {
-          dataKeys.tokenIds = getCalendarOfOwnerKeys(
-            account,
-            derivedState.balance
-          );
-        }
-
-        dataKeys.totalSupply = contracts.Calendar.methods.totalSupply.cacheCall();
-        derivedState.totalSupply = unboxNumeric(
-          props.contracts.Calendar.totalSupply[dataKeys.totalSupply]
-        );
-        if (derivedState.totalSupply) {
-          dataKeys.sampleTokenIds = getCalendarKeys(
-            drawIds(derivedState.totalSupply - 1, 10, account)
-          );
-        }
       }
     }
+  }
 
-    return derivedState;
+  resetAccount() {
+    const { accounts } = this.props;
+    const { contracts } = this.state;
+    const account = accounts && accounts[0];
+    if (account) {
+      this.dataKeys = {
+        balance: contracts.Calendar.methods.balanceOf.cacheCall(account),
+        totalSupply: contracts.Calendar.methods.totalSupply.cacheCall(),
+      };
+    }
   }
 
   createCalendar() {
@@ -122,11 +137,10 @@ class Manage extends React.Component {
 
   render() {
     const { accounts, contracts } = this.props;
-    const { blockie, dataKeys } = this.state;
 
     const account = accounts[0];
     const myCalendarIds = getAllTokensByIndex(
-      dataKeys.tokenIds,
+      this.dataKeys.tokenIds,
       contracts.Calendar.tokenOfOwnerByIndex
     );
     const myCalendars = myCalendarIds.map((tokenId, i) => (
@@ -134,7 +148,7 @@ class Manage extends React.Component {
     ));
     const otherCalendars = arrayDiff(
       getAllTokensByIndex(
-        dataKeys.sampleTokenIds,
+        this.dataKeys.sampleTokenIds,
         contracts.Calendar.tokenByIndex
       ),
       myCalendarIds
@@ -145,18 +159,7 @@ class Manage extends React.Component {
         <Row>
           <Col span={16} offset={4}>
             <div className={styles.container}>
-              <div className={styles.account}>
-                <div>
-                  <img src={blockie} alt={account} />
-                </div>
-                <div>
-                  <h4>{account}</h4>
-                  <Link to={`/${account}`}>
-                    meeteth.io/
-                    {account}
-                  </Link>
-                </div>
-              </div>
+              <AccountHeader account={account} />
               <div className={styles.create}>
                 <Button onClick={this.createCalendar}>
                   Create New Calendar

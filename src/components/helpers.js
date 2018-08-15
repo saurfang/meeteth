@@ -1,9 +1,6 @@
-import makeBlockie from "ethereum-blockies-base64";
 import memoize from "fast-memoize";
 import random from "random";
 import seedrandom from "seedrandom";
-
-export const memoizedBlockie = memoize(makeBlockie);
 
 export function memoizedTokenOfOwnerByIndex(contractMethod) {
   return memoize((id, balance) =>

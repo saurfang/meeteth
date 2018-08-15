@@ -6,8 +6,6 @@ import { drizzleConnect } from "drizzle-react";
 import { LoadingContainer } from "drizzle-react-components";
 import DrizzleExamples from "components/DrizzleExamples";
 import styled from "react-emotion";
-// import { css } from "emotion";
-// import { styles as s } from "stylesheet";
 
 import Dashboard from "./components/Dashboard";
 import Manage from "./components/Manage";
@@ -112,4 +110,4 @@ App.propTypes = {
 
 const mapStateToProps = state => ({ ...state });
 
-export default drizzleConnect(styled(withRouter(App))(styles), mapStateToProps);
+export default styled(withRouter(App))(styles);

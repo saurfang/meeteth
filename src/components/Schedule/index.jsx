@@ -10,6 +10,7 @@ import chroma from "chroma-js";
 import murmurhash from "murmurhash";
 import memoize from "fast-memoize";
 import { Redirect } from "react-router";
+import { Link } from "react-router-dom";
 
 import EventDetailsForm from "./EventDetailsForm";
 import {
@@ -205,7 +206,12 @@ class Schedule extends React.Component {
     return (
       <div>
         <h2>Calendar {id}</h2>
-        {owner && owner.value && <p>Owner: {owner.value}</p>}
+        {owner &&
+          owner.value && (
+            <p>
+              Owner: <Link to={`/${owner.value}`}>{owner.value}</Link>
+            </p>
+          )}
         <Row gutter={16}>
           <Col span={16}>
             <BigCalendar
