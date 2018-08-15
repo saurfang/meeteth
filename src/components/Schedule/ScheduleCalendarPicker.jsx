@@ -5,6 +5,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { css } from "emotion";
 import PropTypes from "prop-types";
+import ReactRouterPropTypes from "react-router-prop-types";
+import { pure } from "recompose";
+import {
+  unboxNumeric,
+  memoizedTokenOfOwnerByIndex,
+  getAllTokensByIndex,
+} from "../helpers";
 
 const styles = {
   container: css({
@@ -26,48 +33,79 @@ const styles = {
   }),
 };
 
+const AccountHeader = pure(({ account, hasData }) => (
+  <div className={styles.container}>
+    <div className={styles.account}>
+      <div>
+        <img src={makeBlockie(account)} alt={account} />
+      </div>
+      <div>
+        <h4>{account}</h4>
+        {hasData && (
+          <span>
+            Please choose the calendar you would like to schedule with.
+          </span>
+        )}
+      </div>
+    </div>
+  </div>
+));
+
+const CalendarLink = pure(({ tokenId }) => (
+  <List.Item>
+    <div className={styles.card}>
+      <Link to={`/meet/${tokenId}`}>Calendar {tokenId || ""}</Link>
+    </div>
+  </List.Item>
+));
+
 class ScheduleCalendarPicker extends React.PureComponent {
+  static propTypes = {
+    match: ReactRouterPropTypes.match.isRequired,
+  };
+
   constructor(props, context) {
     super(props);
 
+    this.dataKeys = {};
+
     this.state = {
-      blockie: null,
       contracts: context.drizzle.contracts,
-      dataKeys: {},
     };
+
+    this.getCalendarOfOwnerKeys = memoizedTokenOfOwnerByIndex(
+      context.drizzle.contracts.Calendar.methods.tokenOfOwnerByIndex
+    );
   }
 
-  static getDerivedStateFromProps(props, state) {
-    const derivedState = {};
-
+  componentDidMount() {
     const {
       match: {
         params: { account },
       },
-    } = props;
+    } = this.props;
 
-    derivedState.blockie = makeBlockie(account);
+    const { contracts } = this.state;
+    this.dataKeys.balance = contracts.Calendar.methods.balanceOf.cacheCall(
+      account
+    );
+  }
 
-    const { contracts } = state;
-    if (contracts) {
-      derivedState.dataKeys = {
-        ...derivedState.dataKeys,
-        balance: contracts.Calendar.methods.balanceOf.cacheCall(account),
-      };
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const {
+      match: {
+        params: { account },
+      },
+      contracts,
+    } = this.props;
 
-      const balance =
-        props.contracts.Calendar.balanceOf[derivedState.dataKeys.balance];
-      if (balance && balance.value) {
-        derivedState.dataKeys = {
-          ...derivedState.dataKeys,
-          tokenIds: Array.from(Array(+balance.value).keys()).map(i =>
-            contracts.Calendar.methods.tokenOfOwnerByIndex.cacheCall(account, i)
-          ),
-        };
-      }
+    const balance = unboxNumeric(
+      contracts.Calendar.balanceOf[this.dataKeys.balance]
+    );
+
+    if (balance) {
+      this.dataKeys.tokenIds = this.getCalendarOfOwnerKeys(account, balance);
     }
-
-    return derivedState;
   }
 
   render() {
@@ -77,26 +115,13 @@ class ScheduleCalendarPicker extends React.PureComponent {
         params: { account },
       },
     } = this.props;
-    const { blockie, dataKeys } = this.state;
 
-    const balance = contracts.Calendar.balanceOf[dataKeys.balance];
-    const myCalendars =
-      balance &&
-      !Object.prototype.hasOwnProperty.call(balance, "error") &&
-      Array.from(Array(+balance.value).keys()).map(i => {
-        const tokenIdKey =
-          dataKeys.tokenIds &&
-          i < dataKeys.tokenIds.length &&
-          dataKeys.tokenIds[i];
-        const tokenId =
-          tokenIdKey &&
-          contracts.Calendar.tokenOfOwnerByIndex[tokenIdKey] &&
-          contracts.Calendar.tokenOfOwnerByIndex[tokenIdKey].value;
-
-        return {
-          tokenId,
-        };
-      });
+    const calendars = getAllTokensByIndex(
+      this.dataKeys.tokenIds,
+      contracts.Calendar.tokenOfOwnerByIndex
+    ).map(tokenId => ({
+      tokenId,
+    }));
 
     return (
       <div>
@@ -105,32 +130,15 @@ class ScheduleCalendarPicker extends React.PureComponent {
             <List
               itemLayout="horizontal"
               size="large"
-              dataSource={myCalendars}
+              dataSource={calendars}
               header={
-                <div className={styles.container}>
-                  <div className={styles.account}>
-                    <div>
-                      <img src={blockie} alt={account} />
-                    </div>
-                    <div>
-                      <h4>{account}</h4>
-                      <span>
-                        Please choose the calendar you would like to schedule
-                        with.
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                <AccountHeader
+                  account={account}
+                  hasData={calendars.length > 0}
+                />
               }
-              renderItem={({ tokenId }) => (
-                <List.Item>
-                  <div className={styles.card}>
-                    <Link to={`/meet/${tokenId}`}>
-                      Calendar {tokenId || ""}
-                    </Link>
-                  </div>
-                </List.Item>
-              )}
+              renderItem={({ tokenId }) => <CalendarLink tokenId={tokenId} />}
+              locale={{ emptyText: "No Calendars Found" }}
             />
           </Col>
         </Row>

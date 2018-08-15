@@ -208,9 +208,9 @@ class Schedule extends React.Component {
         <h2>Calendar {id}</h2>
         {owner &&
           owner.value && (
-            <p>
+            <h5>
               Owner: <Link to={`/${owner.value}`}>{owner.value}</Link>
-            </p>
+            </h5>
           )}
         <Row gutter={16}>
           <Col span={16}>

@@ -77,13 +77,13 @@ class Manage extends React.Component {
 
     this.state = {
       contracts: context.drizzle.contracts,
-      getCalendarOfOwnerKeys: memoizedTokenOfOwnerByIndex(
-        context.drizzle.contracts.Calendar.methods.tokenOfOwnerByIndex
-      ),
-      getCalendarKeys: memoizedTokenByIndex(
-        context.drizzle.contracts.Calendar.methods.tokenByIndex
-      ),
     };
+    this.getCalendarOfOwnerKeys = memoizedTokenOfOwnerByIndex(
+      context.drizzle.contracts.Calendar.methods.tokenOfOwnerByIndex
+    );
+    this.getCalendarKeys = memoizedTokenByIndex(
+      context.drizzle.contracts.Calendar.methods.tokenByIndex
+    );
     this.createCalendar = this.createCalendar.bind(this);
   }
 
@@ -93,7 +93,6 @@ class Manage extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { accounts, contracts } = this.props;
-    const { getCalendarOfOwnerKeys, getCalendarKeys } = this.state;
     const account = accounts && accounts[0];
 
     if (!equal(accounts, prevProps.accounts)) {
@@ -103,14 +102,14 @@ class Manage extends React.Component {
         contracts.Calendar.balanceOf[this.dataKeys.balance]
       );
       if (balance) {
-        this.dataKeys.tokenIds = getCalendarOfOwnerKeys(account, balance);
+        this.dataKeys.tokenIds = this.getCalendarOfOwnerKeys(account, balance);
       }
 
       const totalSupply = unboxNumeric(
         contracts.Calendar.totalSupply[this.dataKeys.totalSupply]
       );
       if (totalSupply) {
-        this.dataKeys.sampleTokenIds = getCalendarKeys(
+        this.dataKeys.sampleTokenIds = this.getCalendarKeys(
           drawIds(totalSupply - 1, 10, account)
         );
       }
