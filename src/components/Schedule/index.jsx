@@ -28,15 +28,21 @@ BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
 class Schedule extends React.Component {
   static eventStyleGetter(event, start, end, isSelected) {
     const colors = chroma.brewer.Set3;
-    const backgroundColor =
+    const hashedColor =
       colors[Math.abs(murmurhash.v3(event.owner)) % colors.length];
+    const backgroundColor = isSelected
+      ? chroma(hashedColor)
+          .darken()
+          .saturate()
+          .hex()
+      : hashedColor;
+    const color =
+      chroma.contrast(backgroundColor, "white") > 4.5 ? "white" : "black";
     const style = {
-      backgroundColor: isSelected
-        ? chroma.darken(backgroundColor)
-        : backgroundColor,
+      backgroundColor,
       // borderRadius: "0px",
       // opacity: 0.8,
-      color: "black",
+      color,
       // border: "1px",
       // display: "block",
     };
