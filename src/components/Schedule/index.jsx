@@ -1,4 +1,4 @@
-import { Row, Col } from "antd";
+import { Row, Col, Alert } from "antd";
 import { drizzleConnect } from "drizzle-react";
 import moment from "moment";
 import React from "react";
@@ -108,7 +108,16 @@ class Schedule extends React.Component {
       contracts.Calendar.reservationBalanceOf[this.dataKeys.balanceKey]
     );
     if (balance) {
-      this.dataKeys.reservationKeys = this.getReservationKeys(id, balance);
+      // NB: limit number of events to prevent browser performance issue
+      // TODO: add pagination and only fetch viewable events based on calendar time range
+      const EVENTS_LIMIT = 100;
+      if (balance > EVENTS_LIMIT) {
+        this.balanceOverLimit = true;
+      }
+      this.dataKeys.reservationKeys = this.getReservationKeys(
+        id,
+        Math.min(balance, EVENTS_LIMIT)
+      );
       this.updateEvents();
     }
   }
@@ -220,6 +229,13 @@ class Schedule extends React.Component {
         )}
         <Row gutter={16}>
           <Col span={16}>
+            {this.balanceOverLimit && (
+              <Alert
+                message="Calendar contains too many events! Only fetching first 100."
+                type="warning"
+                showIcon
+              />
+            )}
             <LazyBigCalendar
               selectable
               events={this.getEvents(events, newEvent)}
