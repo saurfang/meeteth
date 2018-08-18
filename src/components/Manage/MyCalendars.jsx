@@ -45,7 +45,7 @@ class MyCalendars extends React.Component {
 
     this.state = {
       contracts: context.drizzle.contracts,
-      calendarIds: [],
+      calendarIds: null,
     };
 
     this.getCalendarOfOwnerKeys = memoizedTokenOfOwnerByIndex(
@@ -108,9 +108,11 @@ class MyCalendars extends React.Component {
   render() {
     const { calendarIds } = this.state;
 
-    const myCalendars = calendarIds.map((tokenId, i) => (
-      <CalendarCard tokenId={tokenId} key={i} />
-    ));
+    const myCalendars =
+      calendarIds &&
+      calendarIds.map((tokenId, i) => (
+        <CalendarCard tokenId={tokenId} key={i} />
+      ));
     const balance = this.accountBalance();
 
     return (

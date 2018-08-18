@@ -2,7 +2,6 @@ import { drizzleConnect } from "drizzle-react";
 import React from "react";
 import { css } from "emotion";
 import PropTypes from "prop-types";
-import equal from "fast-deep-equal";
 import makeBlockie from "ethereum-blockies-base64";
 
 const styles = {
@@ -19,8 +18,9 @@ const styles = {
   }),
 };
 
-class AccountHeader extends React.Component {
+class AccountHeader extends React.PureComponent {
   static propTypes = {
+    account: PropTypes.string.isRequired,
     children: PropTypes.node,
   };
 
@@ -28,14 +28,8 @@ class AccountHeader extends React.Component {
     drizzle: PropTypes.object,
   };
 
-  shouldComponentUpdate(nextProps) {
-    const { accounts } = this.props;
-    return !equal(nextProps.accounts, accounts);
-  }
-
   render() {
-    const { accounts, children } = this.props;
-    const account = accounts && accounts[0];
+    const { account, children } = this.props;
 
     return (
       <div className={styles.account}>
@@ -51,6 +45,8 @@ class AccountHeader extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({ ...state });
+const mapStateToProps = ({ accounts }) => ({
+  account: accounts && accounts[0],
+});
 
 export default drizzleConnect(AccountHeader, mapStateToProps);

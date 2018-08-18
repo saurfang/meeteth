@@ -1,9 +1,19 @@
 import { Divider, Row, Col } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
+import { css } from "emotion";
 
 import MyCalendars from "../Manage/MyCalendars";
 import AccountHeader from "./AccountHeader";
+
+const styles = {
+  container: css({
+    display: "flex",
+    flex: "1",
+    alignItems: "center",
+    justifyContent: "center",
+  }),
+};
 
 export default class Dashboard extends React.PureComponent {
   constructor(props) {
@@ -32,7 +42,11 @@ export default class Dashboard extends React.PureComponent {
         </Row>
         <Divider>My Reservations</Divider>
         <MyCalendars onCalendarListUpdate={this.updateMyCalendars} />
-        {hasCalendar === false && <Link to="/manage">Create new calendar</Link>}
+        {hasCalendar === false && (
+          <div className={styles.container}>
+            <Link to="/calendars">Create new calendar</Link>
+          </div>
+        )}
       </div>
     );
   }
