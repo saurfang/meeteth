@@ -1,10 +1,11 @@
-import { Divider, Row, Col } from "antd";
+import { Row, Col } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 import { css } from "emotion";
 
 import MyCalendars from "../Manage/MyCalendars";
 import AccountHeader from "./AccountHeader";
+import MyReservations from "../Calendar/MyReservations";
 
 const styles = {
   container: css({
@@ -40,7 +41,9 @@ export default class Dashboard extends React.PureComponent {
             <AccountHeader />
           </Col>
         </Row>
-        <Divider>My Reservations</Divider>
+
+        <MyReservations />
+
         <MyCalendars onCalendarListUpdate={this.updateMyCalendars} />
         {hasCalendar === false && (
           <div className={styles.container}>

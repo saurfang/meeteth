@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { css } from "emotion";
 import PropTypes from "prop-types";
 import arrayDiff from "arr-diff";
-import equal from "fast-deep-equal";
 
 import MyCalendars, { styles as cardStyles, CalendarCard } from "./MyCalendars";
 import {
@@ -27,6 +26,10 @@ const styles = {
 };
 
 class Manage extends React.Component {
+  static propTypes = {
+    account: PropTypes.string,
+  };
+
   constructor(props, context) {
     super(props);
 
@@ -45,14 +48,14 @@ class Manage extends React.Component {
   }
 
   componentDidMount() {
-    this.resetAccount();
+    this.componentDidUpdate({});
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { accounts, contracts } = this.props;
-    const account = accounts && accounts[0];
+    const { account: prevAccount } = prevProps;
+    const { account, contracts } = this.props;
 
-    if (!equal(accounts, prevProps.accounts)) {
+    if (account !== prevAccount) {
       this.resetAccount();
     }
 
@@ -74,9 +77,9 @@ class Manage extends React.Component {
   }
 
   createCalendar() {
-    const { accounts } = this.props;
+    const { account } = this.props;
     const { contracts } = this.state;
-    contracts.Calendar.methods.mint.cacheSend({ from: accounts[0] });
+    contracts.Calendar.methods.mint.cacheSend({ from: account });
   }
 
   updateMyCalendars(myCalendarIds) {
@@ -86,10 +89,9 @@ class Manage extends React.Component {
   }
 
   render() {
-    const { accounts, contracts } = this.props;
+    const { account, contracts } = this.props;
     const { myCalendarIds } = this.state;
 
-    const account = accounts[0];
     const otherCalendars = arrayDiff(
       getAllTokensByIndex(
         this.dataKeys.sampleTokenIds,
@@ -133,6 +135,9 @@ Manage.contextTypes = {
   drizzle: PropTypes.object,
 };
 
-const mapStateToProps = state => ({ ...state });
+const mapStateToProps = ({ accounts, contracts }) => ({
+  contracts,
+  account: accounts && accounts[0],
+});
 
 export default drizzleConnect(Manage, mapStateToProps);

@@ -36,6 +36,8 @@ export const CalendarCard = pure(({ tokenId }) => (
 class MyCalendars extends React.Component {
   static propTypes = {
     onCalendarListUpdate: PropTypes.func,
+    account: PropTypes.string,
+    contracts: PropTypes.object,
   };
 
   constructor(props, context) {
@@ -58,12 +60,15 @@ class MyCalendars extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { accounts } = this.props;
-    const account = accounts && accounts[0];
+    const { account: prevAccount } = prevProps;
 
-    if (!equal(accounts, prevProps.accounts)) {
+    const { account } = this.props;
+
+    if (account !== prevAccount) {
       this.resetAccount();
-    } else if (account) {
+    }
+
+    if (account) {
       this.dataKeys.tokenIds = this.getCalendarOfOwnerKeys(
         account,
         this.accountBalance()
@@ -79,9 +84,9 @@ class MyCalendars extends React.Component {
   }
 
   resetAccount() {
-    const { accounts } = this.props;
+    const { account } = this.props;
     const { contracts } = this.state;
-    const account = accounts && accounts[0];
+
     if (account) {
       this.dataKeys = {
         balance: contracts.Calendar.methods.balanceOf.cacheCall(account),
@@ -128,6 +133,9 @@ MyCalendars.contextTypes = {
   drizzle: PropTypes.object,
 };
 
-const mapStateToProps = state => ({ ...state });
+const mapStateToProps = ({ accounts, contracts }) => ({
+  contracts,
+  account: accounts && accounts[0],
+});
 
 export default drizzleConnect(MyCalendars, mapStateToProps);

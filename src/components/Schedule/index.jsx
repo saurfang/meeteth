@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import { pure } from "recompose";
 import memoize from "fast-memoize";
 
-import EventDetailsForm from "./EventDetailsForm";
+import EventDetailsForm from "../Calendar/EventDetailsForm";
 import {
   memoizedTokenOfOwnerByIndex,
   unbox,
@@ -43,11 +43,7 @@ class Schedule extends React.Component {
       chroma.contrast(backgroundColor, "white") > 4.5 ? "white" : "black";
     const style = {
       backgroundColor,
-      // borderRadius: "0px",
-      // opacity: 0.8,
       color,
-      // border: "1px",
-      // display: "block",
     };
     return {
       style,

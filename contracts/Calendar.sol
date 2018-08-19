@@ -142,7 +142,6 @@ contract Calendar is ERC721Token, ERC809 {
     Reservation reservation = Reservation(reservationContract);
 
     uint256 startTime = reservation.startTimestamps(_reservationId);
-    uint256 stopTime = reservation.stopTimestamps(_reservationId);
     uint256 calendarId = reservation.calendarIds(_reservationId);
     if (calendarId != _tokenId) {
       revert("Calendar id is invalid");
@@ -200,5 +199,19 @@ contract Calendar is ERC721Token, ERC809 {
       stopTime = reservation.stopTimestamps(reservationId);
       owner = reservation.ownerOf(reservationId);
     }
+  }
+
+  /// @notice Get reservation details for an account by index
+  function reservationOfOwnerByIndex(address _owner, uint256 _index)
+  public
+  view
+  returns (uint256 reservationId, uint256 startTime, uint256 stopTime, uint256 calendarId)
+  {
+    Reservation reservation = Reservation(reservationContract);
+
+    reservationId = reservation.tokenOfOwnerByIndex(_owner, _index);
+    startTime = reservation.startTimestamps(reservationId);
+    stopTime = reservation.stopTimestamps(reservationId);
+    calendarId = reservation.calendarIds(reservationId);
   }
 }
