@@ -47,7 +47,7 @@ export default class Dashboard extends React.PureComponent {
         <MyCalendars onCalendarListUpdate={this.updateMyCalendars} />
         {hasCalendar === false && (
           <div className={styles.container}>
-            <Link to="/calendars">Create new calendar</Link>
+            <Link to="/calendars">Manage my calendars</Link>
           </div>
         )}
       </div>

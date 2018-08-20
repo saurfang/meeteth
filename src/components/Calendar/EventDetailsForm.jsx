@@ -10,58 +10,66 @@ const { RangePicker } = DatePicker;
 class EventDetailsForm extends React.Component {
   static propTypes = {
     form: formShape,
-    isUpdating: PropTypes.bool.isRequired,
     event: PropTypes.shape({
       id: PropTypes.number,
       title: PropTypes.string,
+      owner: PropTypes.string,
       start: PropTypes.instanceOf(Date),
       end: PropTypes.instanceOf(Date),
-    }),
-    onFormSubmit: PropTypes.func.isRequired,
+    }).isRequired,
+    buttons: PropTypes.arrayOf(
+      PropTypes.shape({
+        text: PropTypes.string.isRequired,
+        onClick: PropTypes.func.isRequired,
+      })
+    ),
+    rules: PropTypes.object,
   };
 
-  componentDidMount() {
-    const { isUpdating } = this.props;
-    if (!isUpdating) {
-      // this.titleInput.focus();
-    }
-  }
+  static defaultProps = { buttons: [], rules: {} };
 
   componentDidUpdate(prevProps) {
     const {
       event,
       form: { resetFields },
-      isUpdating,
     } = this.props;
     // reset fields properly
     if (event !== prevProps.event) {
       resetFields();
-
-      if (!isUpdating) {
-        // this.titleInput.focus();
-      }
     }
   }
 
-  handleSubmit = e => {
+  handleSubmit = onClick => e => {
     e.preventDefault();
 
     const {
       form: { validateFields },
-      onFormSubmit,
     } = this.props;
 
-    validateFields(onFormSubmit);
+    validateFields(onClick);
   };
 
   render() {
     const {
       form: { getFieldDecorator },
-      isUpdating,
       event,
+      buttons,
+      rules,
     } = this.props;
+
+    const buttonNodes = buttons.map(({ text, onClick }, id) => (
+      <Button type="primary" onClick={this.handleSubmit(onClick)} key={id}>
+        {text}
+      </Button>
+    ));
+
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <Form>
+        <FormItem>
+          {getFieldDecorator("id", {
+            initialValue: event.id,
+          })(<Input disabled hidden />)}
+        </FormItem>
         {/* <FormItem>
           {getFieldDecorator("title", {
             rules: [
@@ -91,16 +99,11 @@ class EventDetailsForm extends React.Component {
         </FormItem>
         <FormItem label="Owner">
           {getFieldDecorator("owner", {
-            rules: [],
+            rules: rules.owner,
             initialValue: event.owner,
-          })(<Input disabled />)}
+          })(<Input disabled={!rules.owner} />)}
         </FormItem>
-        <FormItem>
-          {/* TODO: add ability to update event */}
-          <Button type="primary" htmlType="submit" disabled={isUpdating}>
-            {isUpdating ? "Update" : "Create"}
-          </Button>
-        </FormItem>
+        <FormItem>{buttonNodes}</FormItem>
       </Form>
     );
   }

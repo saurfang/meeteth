@@ -10,6 +10,8 @@ contract Reservation is ERC721Token, Ownable, ERC809Child {
   mapping(uint256 => uint256) public startTimestamps;
   mapping(uint256 => uint256) public stopTimestamps;
 
+  uint256 nextTokenId;
+
   constructor() public ERC721Token("Reservation", "REZ") {
   }
 
@@ -22,7 +24,7 @@ contract Reservation is ERC721Token, Ownable, ERC809Child {
   onlyOwner()
   returns(uint256)
   {
-    uint256 tokenId = totalSupply();
+    uint256 tokenId = nextTokenId++;
     super._mint(_to, tokenId);
 
     calendarIds[tokenId] = _calendarId;

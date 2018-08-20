@@ -52,6 +52,8 @@ class Schedule extends React.Component {
 
   static propTypes = {
     match: ReactRouterPropTypes.match.isRequired,
+    account: PropTypes.string,
+    contracts: PropTypes.object,
   };
 
   constructor(props, context) {
@@ -71,10 +73,22 @@ class Schedule extends React.Component {
       context.drizzle.contracts.Calendar.methods.reservationOfCalendarByIndex
     );
     this.getEvents = memoize((events, newEvent) => [...events, newEvent]);
+    this.ownerValidator = [
+      {
+        validator: (rule, value, callback) =>
+          context.drizzle.web3.utils.isAddress(value)
+            ? callback()
+            : callback([new Error("Invalid address")]),
+        message: "Please enter a valid Ethereum address",
+        required: true,
+      },
+    ];
 
     this.onSelectEvent = this.onSelectEvent.bind(this);
     this.onSelectSlot = this.onSelectSlot.bind(this);
-    this.onEventSubmit = this.onEventSubmit.bind(this);
+    this.onEventCreate = this.onEventCreate.bind(this);
+    this.onEventTransfer = this.onEventTransfer.bind(this);
+    this.onEventCancel = this.onEventCancel.bind(this);
   }
 
   componentDidMount() {
@@ -129,12 +143,12 @@ class Schedule extends React.Component {
   }
 
   onSelectSlot(slotInfo) {
-    const { accounts } = this.props;
+    const { account } = this.props;
     const { newEvent } = this.state;
     const event = {
       id: -1,
       title: newEvent && newEvent.title,
-      owner: accounts[0],
+      owner: account,
       ...slotInfo,
     };
     this.setState({
@@ -143,10 +157,10 @@ class Schedule extends React.Component {
     });
   }
 
-  onEventSubmit(err, values) {
+  onEventCreate(err, values) {
     if (!err) {
       const {
-        accounts,
+        account,
         match: {
           params: { id },
         },
@@ -163,8 +177,44 @@ class Schedule extends React.Component {
         moment(values.timeRange[1])
           .utc()
           .valueOf(),
-        { from: accounts[0] }
+        { from: account }
       );
+    }
+  }
+
+  onEventTransfer(err, values) {
+    if (!err) {
+      const { account } = this.props;
+      const {
+        drizzle: { contracts },
+      } = this.context;
+
+      contracts.Reservation.methods.safeTransferFrom.cacheSend(
+        account,
+        values.owner,
+        values.id,
+        { from: account }
+      );
+    }
+  }
+
+  onEventCancel(err, values) {
+    if (!err) {
+      const {
+        account,
+        match: {
+          params: { id },
+        },
+      } = this.props;
+      const {
+        drizzle: { contracts },
+      } = this.context;
+
+      contracts.Calendar.methods.cancel.cacheSend(id, values.id, {
+        from: account,
+        // gas limit estimation is incorrect
+        gasLimit: "300000",
+      });
     }
   }
 
@@ -176,7 +226,7 @@ class Schedule extends React.Component {
 
   updateEvents() {
     const { contracts } = this.props;
-    const { reservations: currentReservations } = this.state;
+    const { reservations: currentReservations, newEvent } = this.state;
 
     const reservations = getAllTokensByIndex(
       this.dataKeys.reservationKeys,
@@ -193,10 +243,27 @@ class Schedule extends React.Component {
           end: moment(+stopTime).toDate(),
         })
       );
-      this.setState({
-        reservations,
-        events,
-      });
+      const newEventCreated =
+        newEvent &&
+        events.find(
+          ({ owner, start, end }) =>
+            owner === newEvent.owner &&
+            start.getTime() === newEvent.start.getTime() &&
+            end.getTime() === newEvent.end.getTime()
+        );
+      if (newEventCreated) {
+        this.setState({
+          reservations,
+          events,
+          selectedEvent: newEventCreated,
+          newEvent: null,
+        });
+      } else {
+        this.setState({
+          reservations,
+          events,
+        });
+      }
     }
   }
 
@@ -206,6 +273,7 @@ class Schedule extends React.Component {
         params: { id },
       },
       contracts,
+      account,
     } = this.props;
     const { events, newEvent, selectedEvent } = this.state;
 
@@ -214,6 +282,32 @@ class Schedule extends React.Component {
     if (this.calendarNonExists()) {
       return <Redirect to="/" />;
     }
+
+    const buttons =
+      selectedEvent &&
+      [
+        newEvent !== null && {
+          text: "Create",
+          onClick: this.onEventCreate,
+        },
+        newEvent === null &&
+          selectedEvent.owner === account && {
+            text: "Transfer",
+            onClick: this.onEventTransfer,
+          },
+        newEvent === null &&
+          selectedEvent.owner === account && {
+            text: "Cancel",
+            onClick: this.onEventCancel,
+          },
+      ].filter(x => x);
+
+    const rules = selectedEvent && {
+      owner:
+        newEvent === null &&
+        selectedEvent.owner === account &&
+        this.ownerValidator,
+    };
 
     return (
       <div>
@@ -246,9 +340,9 @@ class Schedule extends React.Component {
           <Col span={8}>
             {selectedEvent && (
               <EventDetailsForm
-                isUpdating={newEvent === null}
+                buttons={buttons}
                 event={selectedEvent}
-                onFormSubmit={this.onEventSubmit}
+                rules={rules}
               />
             )}
           </Col>
@@ -262,6 +356,9 @@ Schedule.contextTypes = {
   drizzle: PropTypes.object,
 };
 
-const mapStateToProps = state => ({ ...state });
+const mapStateToProps = ({ accounts, contracts }) => ({
+  account: accounts && accounts[0],
+  contracts,
+});
 
 export default drizzleConnect(Schedule, mapStateToProps);
