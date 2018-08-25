@@ -1,12 +1,13 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
+import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "solidity-treemap/contracts/TreeMap.sol";
 import "./Reservation.sol";
 import "./ERC809.sol";
 
 
-contract Calendar is ERC721Token, ERC809 {
+contract Calendar is ERC721Token, ERC809, Pausable {
   using TreeMap for TreeMap.Map;
 
   // mapping of token(calendar) id to mapping from start/end timestamp of a reservation to its id
@@ -22,6 +23,7 @@ contract Calendar is ERC721Token, ERC809 {
   /// @notice Create a new calendar token
   function mint()
   public
+  whenNotPaused()
   {
     super._mint(msg.sender, totalSupply());
   }
@@ -30,6 +32,7 @@ contract Calendar is ERC721Token, ERC809 {
   /// TODO: figure out what to do when there are expired and/or outstanding reservations
   function burn(uint256 _tokenId)
   public
+  whenNotPaused()
   {
     super._burn(msg.sender, _tokenId);
   }
@@ -83,6 +86,7 @@ contract Calendar is ERC721Token, ERC809 {
   ///  is not previously reserved.
   function reserve(uint256 _tokenId, uint256 _start, uint256 _stop)
   public
+  whenNotPaused()
   returns(uint256)
   {
     require(exists(_tokenId));
@@ -102,6 +106,7 @@ contract Calendar is ERC721Token, ERC809 {
   /// @return number of reservation that has been cancelled
   function cancelAll(uint256 _tokenId, uint256 _start, uint256 _stop)
   public
+  whenNotPaused()
   returns (uint256)
   {
     require(exists(_tokenId));
@@ -136,6 +141,7 @@ contract Calendar is ERC721Token, ERC809 {
   /// @notice Cancel reservation `_reservationId` for calendar `_tokenId`
   function cancel(uint256 _tokenId, uint256 _reservationId)
   public
+  whenNotPaused()
   {
     require(exists(_tokenId));
 
