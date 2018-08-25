@@ -26,6 +26,12 @@ Reservation.sol - ERC721/ERC809 token represents an ephemeral access to a specif
 - /manage - manage Calendar(s) owned by current account
 - /dashboard - display upcoming reservations current account made or was made to
 
+## Develop
+
+```bash
+truffle exec scripts/ens.js -n ganache2 -a 0x5093eaedcc74bcc56128d74fa300e2ecf40c577c
+```
+
 ## Roadmap
 
 - [ ] basic reservation

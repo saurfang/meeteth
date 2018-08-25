@@ -1,17 +1,22 @@
-import { Row, Col, List } from "antd";
+import { Col, List, Row } from "antd";
 import { drizzleConnect } from "drizzle-react";
+import { css } from "emotion";
 import makeBlockie from "ethereum-blockies-base64";
+import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "react-router-dom";
-import { css } from "emotion";
-import PropTypes from "prop-types";
 import ReactRouterPropTypes from "react-router-prop-types";
 import { pure } from "recompose";
+import ENS from "ethereum-ens";
+import { Redirect } from "react-router";
+import TruffleContract from "truffle-contract";
 import {
-  unboxNumeric,
-  memoizedTokenOfOwnerByIndex,
   getAllTokensByIndex,
+  memoizedTokenOfOwnerByIndex,
+  unboxNumeric,
 } from "../helpers";
+
+import ENSRegistry from "../../contracts/ENSRegistry.json";
 
 const styles = {
   container: css({
@@ -33,14 +38,13 @@ const styles = {
   }),
 };
 
-const AccountHeader = pure(({ account, hasData }) => (
+const AccountHeader = pure(({ address, alias, hasData }) => (
   <div className={styles.container}>
     <div className={styles.account}>
+      <div>{address && <img src={makeBlockie(address)} alt={address} />}</div>
       <div>
-        <img src={makeBlockie(account)} alt={account} />
-      </div>
-      <div>
-        <h4>{account}</h4>
+        <h4>{alias || address}</h4>
+        {alias && <h5>{address}</h5>}
         {hasData && (
           <span>
             Please choose the calendar you would like to schedule with.
@@ -62,6 +66,7 @@ const CalendarLink = pure(({ tokenId }) => (
 class ScheduleCalendarPicker extends React.PureComponent {
   static propTypes = {
     match: ReactRouterPropTypes.match.isRequired,
+    contracts: PropTypes.object,
   };
 
   constructor(props, context) {
@@ -71,50 +76,98 @@ class ScheduleCalendarPicker extends React.PureComponent {
 
     this.state = {
       contracts: context.drizzle.contracts,
+      account: null,
+      alias: null,
+      accountError: null,
+      ens: null,
     };
+
+    context.drizzle.web3.eth.net.getId().then(id => {
+      if (id > 4) {
+        const ENSContract = TruffleContract(ENSRegistry);
+        ENSContract.setProvider(context.drizzle.web3.currentProvider);
+        ENSContract.setNetwork(id);
+        this.setState({
+          ens: new ENS(context.drizzle.web3, ENSContract.address),
+        });
+      } else {
+        this.setState({
+          ens: new ENS(context.drizzle.web3),
+        });
+      }
+    });
+    this.isEthAddress = context.drizzle.web3.utils.isAddress;
 
     this.getCalendarOfOwnerKeys = memoizedTokenOfOwnerByIndex(
       context.drizzle.contracts.Calendar.methods.tokenOfOwnerByIndex
     );
   }
 
-  componentDidMount() {
-    const {
-      match: {
-        params: { account },
-      },
-    } = this.props;
-
-    const { contracts } = this.state;
-    this.dataKeys.balance = contracts.Calendar.methods.balanceOf.cacheCall(
-      account
-    );
-  }
-
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const {
-      match: {
-        params: { account },
-      },
-      contracts,
-    } = this.props;
+    const { contracts } = this.props;
+    const { account, ens } = this.state;
 
-    const balance = unboxNumeric(
-      contracts.Calendar.balanceOf[this.dataKeys.balance]
-    );
+    if (ens !== prevState.ens) {
+      this.setAccount();
+    } else if (account) {
+      const balance = unboxNumeric(
+        contracts.Calendar.balanceOf[this.dataKeys.balance]
+      );
 
-    if (balance) {
       this.dataKeys.tokenIds = this.getCalendarOfOwnerKeys(account, balance);
     }
   }
 
-  render() {
+  setAccount() {
     const {
-      contracts,
       match: {
         params: { account },
       },
     } = this.props;
+    const { contracts, ens } = this.state;
+
+    if (this.isEthAddress(account)) {
+      this.dataKeys.balance = contracts.Calendar.methods.balanceOf.cacheCall(
+        account
+      );
+
+      ens
+        .reverse(account)
+        .name()
+        .then(
+          name => {
+            this.setState({ account, alias: name });
+          },
+          err => {
+            this.setState({ account });
+          }
+        );
+    } else {
+      ens
+        .resolver(account)
+        .addr()
+        .then(
+          addr => {
+            this.dataKeys.balance = contracts.Calendar.methods.balanceOf.cacheCall(
+              addr
+            );
+
+            this.setState({ account: addr, alias: account });
+          },
+          accountError => {
+            this.setState({ alias: account, accountError });
+          }
+        );
+    }
+  }
+
+  render() {
+    const { contracts } = this.props;
+    const { account, alias, accountError } = this.state;
+
+    if (accountError) {
+      return <Redirect to="/" />;
+    }
 
     const calendars = getAllTokensByIndex(
       this.dataKeys.tokenIds,
@@ -133,7 +186,8 @@ class ScheduleCalendarPicker extends React.PureComponent {
               dataSource={calendars}
               header={
                 <AccountHeader
-                  account={account}
+                  address={account}
+                  alias={alias}
                   hasData={calendars.length > 0}
                 />
               }
