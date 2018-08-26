@@ -193,7 +193,11 @@ class Schedule extends React.Component {
         account,
         values.owner,
         values.id,
-        { from: account }
+        {
+          from: account,
+          // gas limit can be underestimated
+          gasLimit: "300000",
+        }
       );
     }
   }
@@ -213,7 +217,7 @@ class Schedule extends React.Component {
       contracts.Calendar.methods.cancel.cacheSend(id, values.id, {
         from: account,
         // gas limit estimation is incorrect
-        gasLimit: "300000",
+        gasLimit: "400000",
       });
     }
   }

@@ -12,6 +12,22 @@ Lastly, doctors with common practice area can participate in a TCR where reserva
 
 **Machine to Machine** reservation: this naturally extends to machine to machine as well. A self-driving autonomous vehicle can manage its own wallet and bids for rides. When providing the ride, it communicates with traffic management smart contract to bid and reserve the right of road at an intersection. When it does its route planning, it can precisely calculate the time it enters and leaves each intersection, and can further trade the right of road as traffic condition changes.
 
+## Development
+
+To setup the development environment, you will need `yarn` and `ganache-cli`
+
+```bash
+# install npm packages
+yarn
+# start development networks
+# npm install -g ganache-cli
+ganache-cli
+# compile and deploy contracts
+truffle migrate
+# start development webserver
+yarn start
+```
+
 ## Contracts
 
 Calendar.sol - ERC721 token represents a schedulable calendar. The owner can accept/cancel/manage reservations as well as setting reservation and calendar rules.
