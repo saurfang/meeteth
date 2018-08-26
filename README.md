@@ -1,5 +1,8 @@
 # MeetETH
 
+[![Build Status](https://travis-ci.org/saurfang/meeteth.svg?branch=master)](https://travis-ci.org/saurfang/meeteth)
+[![Coverage Status](https://coveralls.io/repos/github/saurfang/meeteth/badge.svg?branch=master)](https://coveralls.io/github/saurfang/meeteth?branch=master)
+
 Proof of Concept of ERC809, the standard for rentable non-fungible tokens. The ERC809 token itself represents an ephemeral access to a tokenized (non-)fungible asset. Such asset may be a travel accommodation, some professional service e.g. doctor, or even the right of road.
 
 MeetETH is a simple scheduling Dapp that allows user to create tokenized calendar bound to ethereum account and invite other users to create tokenized reservations on such calendars. While the interaction may look simple, it has many exciting use cases.
