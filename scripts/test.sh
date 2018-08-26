@@ -53,5 +53,6 @@ if [ "$SOLIDITY_COVERAGE" = true ]; then
   fi
 else
   node_modules/.bin/truffle migrate
+
   node_modules/.bin/truffle test "$@"
 fi
