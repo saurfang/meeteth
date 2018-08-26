@@ -1,11 +1,13 @@
 pragma solidity ^0.4.24;
 
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./ERC809.sol";
 
 
 contract Reservation is ERC721Token, Ownable, ERC809Child {
+
   mapping(uint256 => uint256) public calendarIds;
   mapping(uint256 => uint256) public startTimestamps;
   mapping(uint256 => uint256) public stopTimestamps;
@@ -24,7 +26,9 @@ contract Reservation is ERC721Token, Ownable, ERC809Child {
   onlyOwner()
   returns(uint256)
   {
-    uint256 tokenId = nextTokenId++;
+    uint256 tokenId = nextTokenId;
+    nextTokenId = nextTokenId.add(1);
+
     super._mint(_to, tokenId);
 
     calendarIds[tokenId] = _calendarId;

@@ -1,3 +1,6 @@
 truffle-config.js
+config-overrides.js
 migrations/*.js
 coverage/
+src/registerServiceWorker.js
+scripts/

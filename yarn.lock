@@ -8919,9 +8919,9 @@ solidity-parser-sc@0.4.11:
     pegjs "^0.10.0"
     yargs "^4.6.0"
 
-solidity-treemap@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/solidity-treemap/-/solidity-treemap-0.0.1.tgz#90415c276a87315ab4e9fd4989d9c801c8cd228f"
+solidity-treemap@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/solidity-treemap/-/solidity-treemap-0.0.2.tgz#3f06e95427c6802c291202ddf84e848e7388f098"
 
 solium-plugin-security@0.1.1:
   version "0.1.1"

@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ensdomains/ens": "^0.1.1",
     "antd": "^3.8.3",
     "arr-diff": "^4.0.0",
     "chroma-js": "^1.3.7",
@@ -13,7 +12,6 @@
     "drizzle-react-components": "^1.2.0",
     "emotion": "^9.2.6",
     "eth-block-tracker-es5": "^2.3.2",
-    "eth-ens-namehash": "^2.0.8",
     "ethereum-blockies-base64": "^1.0.2",
     "ethereum-ens": "^0.7.4",
     "fast-deep-equal": "^2.0.1",
@@ -55,8 +53,8 @@
     "precommit": "lint-staged",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject",
+    "test": "./scripts/test.sh",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:sol": "solium -d .",
@@ -66,6 +64,7 @@
     "coverage": "./node_modules/.bin/solidity-coverage && cat coverage/lcov.info | node_modules/.bin/coveralls"
   },
   "devDependencies": {
+    "@ensdomains/ens": "^0.1.1",
     "babel-cli": "^6.26.0",
     "babel-plugin-import": "^1.8.0",
     "babel-preset-env": "^1.7.0",
@@ -74,6 +73,7 @@
     "chai-bignumber": "^2.0.2",
     "coveralls": "^3.0.2",
     "dirty-chai": "^2.0.1",
+    "eth-ens-namehash": "^2.0.8",
     "eslint": "^5.4.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^3.0.1",
@@ -89,7 +89,7 @@
     "prettier": "^1.14.2",
     "react-app-rewired": "^1.5.2",
     "solidity-coverage": "^0.5.8",
-    "solidity-treemap": "^0.0.1",
+    "solidity-treemap": "^0.0.2",
     "solium": "^1.1.8",
     "truffle": "^4.1.14"
   },

@@ -89,7 +89,7 @@ contract Calendar is ERC721Token, ERC809, Pausable {
   whenNotPaused()
   returns(uint256)
   {
-    require(exists(_tokenId));
+    require(exists(_tokenId), "Calendar does not exist");
 
     if (!isAvailable(_tokenId, _start, _stop)) {
       revert("Token is unavailable during this time period");
@@ -109,7 +109,7 @@ contract Calendar is ERC721Token, ERC809, Pausable {
   whenNotPaused()
   returns (uint256)
   {
-    require(exists(_tokenId));
+    require(exists(_tokenId), "Calendar does not exist");
 
     // TODO: implement iterator in TreeMap for more efficient batch removal
     TreeMap.Map storage startTimestamps = startTimestampsMap[_tokenId];
@@ -143,7 +143,7 @@ contract Calendar is ERC721Token, ERC809, Pausable {
   public
   whenNotPaused()
   {
-    require(exists(_tokenId));
+    require(exists(_tokenId), "Calendar does not exist");
 
     Reservation reservation = Reservation(reservationContract);
 
@@ -199,12 +199,11 @@ contract Calendar is ERC721Token, ERC809, Pausable {
   {
     bool found;
     (found, startTime, reservationId) = startTimestampsMap[_tokenId].select(_index);
+    require(found, "Reservation index out of bound");
 
-    if (found) {
-      Reservation reservation = Reservation(reservationContract);
-      stopTime = reservation.stopTimestamps(reservationId);
-      owner = reservation.ownerOf(reservationId);
-    }
+    Reservation reservation = Reservation(reservationContract);
+    stopTime = reservation.stopTimestamps(reservationId);
+    owner = reservation.ownerOf(reservationId);
   }
 
   /// @notice Get reservation details for an account by index

@@ -4,6 +4,7 @@ import { Link, Route, Switch, withRouter, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { LoadingContainer } from "drizzle-react-components";
 import styled from "react-emotion";
+import ReactRouterPropTypes from "react-router-prop-types";
 
 import Dashboard from "./components/Dashboard";
 import Manage from "./components/Manage";
@@ -124,6 +125,7 @@ const App = props => {
 
 App.propTypes = {
   className: PropTypes.string.isRequired,
+  location: ReactRouterPropTypes.location.isRequired,
 };
 
 export default styled(withRouter(App))(styles);
