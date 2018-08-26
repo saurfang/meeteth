@@ -105,6 +105,7 @@ contract("Calendar", ([owner, renter1, renter2]) => {
     before(async () => {
       calendar = await Calendar.new();
       await calendar.mint();
+      await calendar.mint();
 
       await calendar.reserve(0, 1000, 2000, { from: renter1 });
       await calendar.reserve(0, 3000, 3500, { from: renter1 });
@@ -134,6 +135,12 @@ contract("Calendar", ([owner, renter1, renter2]) => {
     it("reverts if the calendar id doesn't match", async () => {
       calendar
         .cancel(1, 0, { from: renter1 })
+        .should.be.rejectedWith(EVMRevert);
+    });
+
+    it("reverts if the calendar id doesn't exist", async () => {
+      calendar
+        .cancel(2, 0, { from: renter1 })
         .should.be.rejectedWith(EVMRevert);
     });
   });
