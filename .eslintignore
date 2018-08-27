@@ -3,4 +3,5 @@ config-overrides.js
 migrations/*.js
 coverage/
 src/registerServiceWorker.js
+src/dependencies/
 scripts/

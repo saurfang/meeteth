@@ -2,7 +2,7 @@ import { drizzleConnect } from "drizzle-react";
 import React from "react";
 import { css } from "emotion";
 import PropTypes from "prop-types";
-import makeBlockie from "ethereum-blockies-base64";
+import makeBlockie from "../../dependencies/ethereum-blockies-base64";
 
 const styles = {
   account: css({

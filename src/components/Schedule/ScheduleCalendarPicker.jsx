@@ -1,7 +1,6 @@
 import { Col, List, Row } from "antd";
 import { drizzleConnect } from "drizzle-react";
 import { css } from "emotion";
-import makeBlockie from "ethereum-blockies-base64";
 import PropTypes from "prop-types";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -10,6 +9,7 @@ import { pure } from "recompose";
 import ENS from "ethereum-ens";
 import { Redirect } from "react-router";
 import TruffleContract from "truffle-contract";
+import makeBlockie from "../../dependencies/ethereum-blockies-base64";
 import {
   getAllTokensByIndex,
   memoizedTokenOfOwnerByIndex,

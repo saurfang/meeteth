@@ -6,7 +6,11 @@ require("mocha-clean");
 require("dotenv").config();
 const HDWalletProvider = require("truffle-hdwallet-provider");
 
+// https://github.com/trufflesuite/truffle-migrate/issues/10#issuecomment-402441008
+const fullPathBuildDirectory = `${__dirname}/src/contracts`;
+
 module.exports = {
+  contracts_build_directory: fullPathBuildDirectory,
   networks: {
     coverage: {
       gas: 0xfffffffffff,

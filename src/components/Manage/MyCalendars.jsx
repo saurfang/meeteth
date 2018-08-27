@@ -66,13 +66,7 @@ class MyCalendars extends React.Component {
 
     if (account !== prevAccount) {
       this.resetAccount();
-    }
-
-    if (account) {
-      this.dataKeys.tokenIds = this.getCalendarOfOwnerKeys(
-        account,
-        this.accountBalance()
-      );
+    } else if (account) {
       this.updateCalendars();
     }
   }
@@ -91,12 +85,19 @@ class MyCalendars extends React.Component {
       this.dataKeys = {
         balance: contracts.Calendar.methods.balanceOf.cacheCall(account),
       };
+
+      this.updateCalendars();
     }
   }
 
   updateCalendars() {
-    const { contracts, onCalendarListUpdate } = this.props;
+    const { contracts, onCalendarListUpdate, account } = this.props;
     const { calendarIds: currentCalendarIds } = this.state;
+
+    this.dataKeys.tokenIds = this.getCalendarOfOwnerKeys(
+      account,
+      this.accountBalance()
+    );
 
     const calendarIds = getAllTokensByIndex(
       this.dataKeys.tokenIds,

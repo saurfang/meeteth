@@ -1,5 +1,4 @@
 import memoize from "fast-memoize";
-import random from "random";
 import seedrandom from "seedrandom";
 
 export function memoizedTokenOfOwnerByIndex(contractMethod) {
@@ -13,11 +12,11 @@ export function memoizedTokenByIndex(contractMethod) {
 }
 
 export const drawIds = memoize((max, length, seed) => {
-  random.use(seedrandom(seed));
+  const rng = seedrandom(seed);
 
   const reservoir = Array.from(Array(Math.min(max + 1, length)).keys());
   for (let i = reservoir.length; i <= max; i += 1) {
-    const j = random.int(0, i);
+    const j = Math.abs(rng.int % i);
     if (j < length) {
       reservoir[j] = i;
     }

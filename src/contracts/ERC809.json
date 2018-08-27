@@ -1,5 +1,5 @@
 {
-  "contractName": "ERC809Child",
+  "contractName": "ERC809",
   "abi": [
     {
       "constant": true,
@@ -333,50 +333,6 @@
       "inputs": [
         {
           "indexed": true,
-          "name": "_renter",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "name": "_calendarId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "_tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "Creation",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "name": "_renter",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "name": "_calendarId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "name": "_tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "Cancellation",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
           "name": "_from",
           "type": "address"
         },
@@ -437,6 +393,101 @@
       ],
       "name": "ApprovalForAll",
       "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "name": "_time",
+          "type": "uint256"
+        }
+      ],
+      "name": "renterOf",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "name": "_start",
+          "type": "uint256"
+        },
+        {
+          "name": "_stop",
+          "type": "uint256"
+        }
+      ],
+      "name": "isAvailable",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "name": "_start",
+          "type": "uint256"
+        },
+        {
+          "name": "_stop",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancelAll",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "name": "_reservationId",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancel",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
   ],
   "bytecode": "0x",
@@ -475,7 +526,7 @@
         "id": 568,
         "nodeType": "ImportDirective",
         "scope": 629,
-        "sourceUnit": 1142,
+        "sourceUnit": 1199,
         "src": "26:65:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -489,10 +540,10 @@
               "id": 569,
               "name": "ERC721",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1141,
+              "referencedDeclaration": 1198,
               "src": "192:6:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC721_$1141",
+                "typeIdentifier": "t_contract$_ERC721_$1198",
                 "typeString": "contract ERC721"
               }
             },
@@ -502,11 +553,11 @@
           }
         ],
         "contractDependencies": [
-          796,
-          1114,
-          1134,
-          1141,
-          1263
+          853,
+          1171,
+          1191,
+          1198,
+          1320
         ],
         "contractKind": "contract",
         "documentation": "@title ERC809: a standard interface for renting rival non-fungible tokens.",
@@ -514,11 +565,11 @@
         "id": 609,
         "linearizedBaseContracts": [
           609,
-          1141,
-          1134,
-          1114,
-          1263,
-          796
+          1198,
+          1191,
+          1171,
+          1320,
+          853
         ],
         "name": "ERC809",
         "nodeType": "ContractDefinition",
@@ -997,10 +1048,10 @@
               "id": 610,
               "name": "ERC721",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1141,
+              "referencedDeclaration": 1198,
               "src": "1272:6:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC721_$1141",
+                "typeIdentifier": "t_contract$_ERC721_$1198",
                 "typeString": "contract ERC721"
               }
             },
@@ -1010,11 +1061,11 @@
           }
         ],
         "contractDependencies": [
-          796,
-          1114,
-          1134,
-          1141,
-          1263
+          853,
+          1171,
+          1191,
+          1198,
+          1320
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -1022,11 +1073,11 @@
         "id": 628,
         "linearizedBaseContracts": [
           628,
-          1141,
-          1134,
-          1114,
-          1263,
-          796
+          1198,
+          1191,
+          1171,
+          1320,
+          853
         ],
         "name": "ERC809Child",
         "nodeType": "ContractDefinition",
@@ -1260,7 +1311,7 @@
         "id": 568,
         "nodeType": "ImportDirective",
         "scope": 629,
-        "sourceUnit": 1142,
+        "sourceUnit": 1199,
         "src": "26:65:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1274,10 +1325,10 @@
               "id": 569,
               "name": "ERC721",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1141,
+              "referencedDeclaration": 1198,
               "src": "192:6:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC721_$1141",
+                "typeIdentifier": "t_contract$_ERC721_$1198",
                 "typeString": "contract ERC721"
               }
             },
@@ -1287,11 +1338,11 @@
           }
         ],
         "contractDependencies": [
-          796,
-          1114,
-          1134,
-          1141,
-          1263
+          853,
+          1171,
+          1191,
+          1198,
+          1320
         ],
         "contractKind": "contract",
         "documentation": "@title ERC809: a standard interface for renting rival non-fungible tokens.",
@@ -1299,11 +1350,11 @@
         "id": 609,
         "linearizedBaseContracts": [
           609,
-          1141,
-          1134,
-          1114,
-          1263,
-          796
+          1198,
+          1191,
+          1171,
+          1320,
+          853
         ],
         "name": "ERC809",
         "nodeType": "ContractDefinition",
@@ -1782,10 +1833,10 @@
               "id": 610,
               "name": "ERC721",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1141,
+              "referencedDeclaration": 1198,
               "src": "1272:6:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC721_$1141",
+                "typeIdentifier": "t_contract$_ERC721_$1198",
                 "typeString": "contract ERC721"
               }
             },
@@ -1795,11 +1846,11 @@
           }
         ],
         "contractDependencies": [
-          796,
-          1114,
-          1134,
-          1141,
-          1263
+          853,
+          1171,
+          1191,
+          1198,
+          1320
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -1807,11 +1858,11 @@
         "id": 628,
         "linearizedBaseContracts": [
           628,
-          1141,
-          1134,
-          1114,
-          1263,
-          796
+          1198,
+          1191,
+          1171,
+          1320,
+          853
         ],
         "name": "ERC809Child",
         "nodeType": "ContractDefinition",
@@ -2021,5 +2072,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-08-27T03:56:02.073Z"
+  "updatedAt": "2018-08-27T04:32:03.831Z"
 }
