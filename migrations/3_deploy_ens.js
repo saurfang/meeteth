@@ -2,19 +2,19 @@ module.exports = function(deployer) {
   if (deployer.network == "test" || deployer.network == "coverage")
     return "no need to deploy contract";
 
-  const ENS = artifacts.require("@ensdomains/ens/ENSRegistry.sol");
-  const PublicResolver = artifacts.require(
-    "@ensdomains/ens/PublicResolver.sol"
-  );
-  const ReverseRegistrar = artifacts.require(
-    "@ensdomains/ens/ReverseRegistrar.sol"
-  );
-  const namehash = require("eth-ens-namehash");
+  if (deployer.network == "development") {
+    const ENS = artifacts.require("@ensdomains/ens/ENSRegistry.sol");
+    const PublicResolver = artifacts.require(
+      "@ensdomains/ens/PublicResolver.sol"
+    );
+    const ReverseRegistrar = artifacts.require(
+      "@ensdomains/ens/ReverseRegistrar.sol"
+    );
+    const namehash = require("eth-ens-namehash");
 
-  let owner = web3.eth.accounts[0];
+    return deployer.then(() => {
+      let owner = web3.eth.accounts[0];
 
-  return deployer.then(() => {
-    if (deployer.network == "development") {
       return deployer
         .deploy(ENS)
         .then(() => {
@@ -53,6 +53,6 @@ module.exports = function(deployer) {
               )
           );
         });
-    }
-  });
+    });
+  }
 };
