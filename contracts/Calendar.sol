@@ -58,6 +58,7 @@ contract Calendar is ERC721Token, ERC809, Pausable {
   view
   returns(bool)
   {
+    require(_stop > _start, "Stop must ends after start");
 
     bool found;
     uint256 reservationId;

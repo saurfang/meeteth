@@ -15,6 +15,10 @@ contract("Calendar", ([owner, renter1, renter2]) => {
       await calendar.mint();
     });
 
+    it("requires stop time to be after start time", async () => {
+      calendar.reserve(0, 2000, 1000).should.be.rejectedWith(EVMRevert);
+    });
+
     it("maintains ownership of token to actual owner", async () => {
       (await calendar.ownerOf(0)).should.equal(owner);
     });
