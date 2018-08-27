@@ -31,11 +31,17 @@ truffle migrate
 yarn start
 ```
 
+To register with development ENS:
+
+```bash
+truffle exec scripts/ens.js -n ganache2 -a 0x5093eaedcc74bcc56128d74fa300e2ecf40c577c
+```
+
 ## Contracts
 
-Calendar.sol - ERC721 token represents a schedulable calendar. The owner can accept/cancel/manage reservations as well as setting reservation and calendar rules.
+Calendar.sol - ERC721/ERC809 token represents a schedulable calendar.
 
-Reservation.sol - ERC721/ERC809 token represents an ephemeral access to a specific Calendar token.
+Reservation.sol - ERC721/ERC809Child token represents an ephemeral access to a specific Calendar token.
 
 **No audit has been performed on these contracts. Use of this code in production is strongly discouraged.**
 
@@ -44,12 +50,7 @@ Reservation.sol - ERC721/ERC809 token represents an ephemeral access to a specif
 - /meet/:id - schedule a reservation on token with `:id` id
 - /manage - manage Calendar(s) owned by current account
 - /dashboard - display upcoming reservations current account made or was made to
-
-## Develop
-
-```bash
-truffle exec scripts/ens.js -n ganache2 -a 0x5093eaedcc74bcc56128d74fa300e2ecf40c577c
-```
+- /:account - list all calendars owned by `:account`, which can be an ETH or ENS address
 
 ## Roadmap
 
