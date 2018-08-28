@@ -1,4 +1,4 @@
-import { Divider, Button, Row, Col } from "antd";
+import { Divider, Button } from "antd";
 import { drizzleConnect } from "drizzle-react";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -19,9 +19,12 @@ const styles = {
   ...cardStyles,
   container: css({
     display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
   }),
   create: css({
     alignSelf: "center",
+    margin: "0 16px",
   }),
 };
 
@@ -102,23 +105,17 @@ class Manage extends React.Component {
 
     return (
       <div>
-        <Row>
-          <Col span={16} offset={4}>
-            <div className={styles.container}>
-              <AccountHeader>
-                <Link to={`/${account}`}>
-                  meeteth.io/
-                  {account}
-                </Link>
-              </AccountHeader>
-              <div className={styles.create}>
-                <Button onClick={this.createCalendar}>
-                  Create New Calendar
-                </Button>
-              </div>
-            </div>
-          </Col>
-        </Row>
+        <div className={styles.container}>
+          <AccountHeader>
+            <Link to={`/${account}`}>
+              meeteth.io/
+              {account}
+            </Link>
+          </AccountHeader>
+          <div className={styles.create}>
+            <Button onClick={this.createCalendar}>Create New Calendar</Button>
+          </div>
+        </div>
         <MyCalendars onCalendarListUpdate={this.updateMyCalendars} />
         {otherCalendars.length > 0 && (
           <div>

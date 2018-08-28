@@ -6,15 +6,15 @@ import makeBlockie from "../../dependencies/ethereum-blockies-base64";
 
 const styles = {
   account: css({
-    flex: "1",
     display: "flex",
-    "& div": {
-      margin: 8,
-    },
-    "& img": {
-      width: 64,
-      height: 64,
-    },
+  }),
+  accountImg: css({
+    width: 64,
+    height: 64,
+    margin: 8,
+  }),
+  div: css({
+    margin: 8,
   }),
 };
 
@@ -33,10 +33,10 @@ class AccountHeader extends React.PureComponent {
 
     return (
       <div className={styles.account}>
-        <div>
+        <div className={styles.accountImg}>
           <img src={makeBlockie(account)} alt={account} />
         </div>
-        <div>
+        <div className={styles.div}>
           <h4>{account}</h4>
           {children}
         </div>

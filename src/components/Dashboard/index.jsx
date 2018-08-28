@@ -10,9 +10,11 @@ import MyReservations from "../Calendar/MyReservations";
 const styles = {
   container: css({
     display: "flex",
+    flexWrap: "wrap",
     flex: "1",
     alignItems: "center",
     justifyContent: "center",
+    margin: 16,
   }),
 };
 
@@ -36,11 +38,9 @@ export default class Dashboard extends React.PureComponent {
 
     return (
       <div>
-        <Row>
-          <Col span={16} offset={4}>
-            <AccountHeader />
-          </Col>
-        </Row>
+        <div className={styles.container}>
+          <AccountHeader />
+        </div>
 
         <MyReservations />
 

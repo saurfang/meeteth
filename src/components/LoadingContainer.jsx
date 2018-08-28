@@ -13,7 +13,7 @@ class LoadingContainer extends Component {
     loading: PropTypes.node,
     children: PropTypes.node,
     web3: PropTypes.object,
-    accounts: PropTypes.arrayOf(PropTypes.string),
+    accounts: PropTypes.object,
     drizzleStatus: PropTypes.object,
   };
 
