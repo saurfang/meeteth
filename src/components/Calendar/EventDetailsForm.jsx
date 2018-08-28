@@ -93,6 +93,21 @@ class EventDetailsForm extends React.Component {
                 required: true,
                 message: "Please select your event time!",
               },
+              {
+                validator: (rule, [start, end], callback) => {
+                  if (end && start) {
+                    const duration = moment.duration(end.diff(start));
+                    // TODO: remove magic number
+                    if (duration.asHours() > 8) {
+                      callback([new Error("Invalid time period")]);
+                    }
+                  }
+                  callback();
+                },
+                message:
+                  "Reservation time period must not be longer than 8 hours",
+                required: true,
+              },
             ],
             initialValue: [moment(event.start), moment(event.end)],
           })(<RangePicker showTime format="YYYY-MM-DD HH:mm" />)}

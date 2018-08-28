@@ -10,6 +10,9 @@ import "./ERC809.sol";
 contract Calendar is ERC721Token, ERC809, Pausable {
   using TreeMap for TreeMap.Map;
 
+  // limit reservation duration to 8 hours because we do not have spam protection yet
+  uint256 constant public RESERVATION_DURATION_LIMIT = 8 hours * 1000;
+
   // mapping of token(calendar) id to mapping from start/end timestamp of a reservation to its id
   mapping(uint256 => TreeMap.Map) public startTimestampsMap;
 
@@ -59,6 +62,7 @@ contract Calendar is ERC721Token, ERC809, Pausable {
   returns(bool)
   {
     require(_stop > _start, "Stop must ends after start");
+    require(_stop - _start <= RESERVATION_DURATION_LIMIT, "Reservation duration must not exceed limit");
 
     bool found;
     uint256 reservationId;

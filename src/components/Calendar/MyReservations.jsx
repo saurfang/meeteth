@@ -10,7 +10,7 @@ import murmurhash from "murmurhash";
 import { pure } from "recompose";
 import { css } from "emotion";
 
-import EventDetailsForm from "../Calendar/EventDetailsForm";
+import EventDetailsForm from "./EventDetailsForm";
 import {
   memoizedTokenOfOwnerByIndex,
   unboxNumeric,
@@ -106,17 +106,6 @@ class MyReservations extends React.Component {
     }
   }
 
-  resetAccount() {
-    const { account } = this.props;
-    const { contracts } = this.state;
-    if (account) {
-      this.dataKeys = {
-        balance: contracts.Reservation.methods.balanceOf.cacheCall(account),
-      };
-      this.updateEvents();
-    }
-  }
-
   onSelectEvent(event) {
     const { selectedEvent } = this.state;
     if (selectedEvent === null || selectedEvent.id !== event.id) {
@@ -143,6 +132,17 @@ class MyReservations extends React.Component {
           .valueOf(),
         { from: account }
       );
+    }
+  }
+
+  resetAccount() {
+    const { account } = this.props;
+    const { contracts } = this.state;
+    if (account) {
+      this.dataKeys = {
+        balance: contracts.Reservation.methods.balanceOf.cacheCall(account),
+      };
+      this.updateEvents();
     }
   }
 

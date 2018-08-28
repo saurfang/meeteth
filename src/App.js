@@ -2,10 +2,10 @@ import { Breadcrumb, Col, Icon, Layout, Menu, Row } from "antd";
 import React from "react";
 import { Link, Route, Switch, withRouter, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
-import { LoadingContainer } from "drizzle-react-components";
 import styled from "react-emotion";
 import ReactRouterPropTypes from "react-router-prop-types";
 
+import LoadingContainer from "./components/LoadingContainer";
 import Dashboard from "./components/Dashboard";
 import Manage from "./components/Manage";
 import Schedule from "./components/Schedule";

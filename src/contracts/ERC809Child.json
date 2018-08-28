@@ -449,17 +449,17 @@
     "absolutePath": "/Users/saurfang/workspace/meeth/contracts/ERC809.sol",
     "exportedSymbols": {
       "ERC809": [
-        609
+        630
       ],
       "ERC809Child": [
-        628
+        649
       ]
     },
-    "id": 629,
+    "id": 650,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 567,
+        "id": 588,
         "literals": [
           "solidity",
           "^",
@@ -472,10 +472,10 @@
       {
         "absolutePath": "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol",
         "file": "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol",
-        "id": 568,
+        "id": 589,
         "nodeType": "ImportDirective",
-        "scope": 629,
-        "sourceUnit": 1199,
+        "scope": 650,
+        "sourceUnit": 1163,
         "src": "26:65:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -486,39 +486,39 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 569,
+              "id": 590,
               "name": "ERC721",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1198,
+              "referencedDeclaration": 1162,
               "src": "192:6:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC721_$1198",
+                "typeIdentifier": "t_contract$_ERC721_$1162",
                 "typeString": "contract ERC721"
               }
             },
-            "id": 570,
+            "id": 591,
             "nodeType": "InheritanceSpecifier",
             "src": "192:6:1"
           }
         ],
         "contractDependencies": [
-          853,
-          1171,
-          1191,
-          1198,
-          1320
+          817,
+          1135,
+          1155,
+          1162,
+          1284
         ],
         "contractKind": "contract",
         "documentation": "@title ERC809: a standard interface for renting rival non-fungible tokens.",
         "fullyImplemented": false,
-        "id": 609,
+        "id": 630,
         "linearizedBaseContracts": [
-          609,
-          1198,
-          1191,
-          1171,
-          1320,
-          853
+          630,
+          1162,
+          1155,
+          1135,
+          1284,
+          817
         ],
         "name": "ERC809",
         "nodeType": "ContractDefinition",
@@ -526,7 +526,7 @@
           {
             "body": null,
             "documentation": "@notice Find the renter of an NFT token as of `_time`\n @dev The renter is who made a reservation on `_tokenId` and the reservation spans over `_time`.",
-            "id": 579,
+            "id": 600,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -534,15 +534,15 @@
             "name": "renterOf",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 575,
+              "id": 596,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 572,
+                  "id": 593,
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 579,
+                  "scope": 600,
                   "src": "517:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -551,7 +551,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 571,
+                    "id": 592,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "517:7:1",
@@ -565,10 +565,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 574,
+                  "id": 595,
                   "name": "_time",
                   "nodeType": "VariableDeclaration",
-                  "scope": 579,
+                  "scope": 600,
                   "src": "535:13:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -577,7 +577,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 573,
+                    "id": 594,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "535:7:1",
@@ -594,15 +594,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 578,
+              "id": 599,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 577,
+                  "id": 598,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 579,
+                  "scope": 600,
                   "src": "571:7:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -611,7 +611,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 576,
+                    "id": 597,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "571:7:1",
@@ -626,7 +626,7 @@
               ],
               "src": "570:9:1"
             },
-            "scope": 609,
+            "scope": 630,
             "src": "499:81:1",
             "stateMutability": "view",
             "superFunction": null,
@@ -635,7 +635,7 @@
           {
             "body": null,
             "documentation": "@notice Query if token `_tokenId` if available to reserve between `_start` and `_stop` time",
-            "id": 590,
+            "id": 611,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -643,15 +643,15 @@
             "name": "isAvailable",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 586,
+              "id": 607,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 581,
+                  "id": 602,
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 590,
+                  "scope": 611,
                   "src": "703:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -660,7 +660,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 580,
+                    "id": 601,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "703:7:1",
@@ -674,10 +674,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 583,
+                  "id": 604,
                   "name": "_start",
                   "nodeType": "VariableDeclaration",
-                  "scope": 590,
+                  "scope": 611,
                   "src": "721:14:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -686,7 +686,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 582,
+                    "id": 603,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "721:7:1",
@@ -700,10 +700,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 585,
+                  "id": 606,
                   "name": "_stop",
                   "nodeType": "VariableDeclaration",
-                  "scope": 590,
+                  "scope": 611,
                   "src": "737:13:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -712,7 +712,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 584,
+                    "id": 605,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "737:7:1",
@@ -729,15 +729,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 589,
+              "id": 610,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 588,
+                  "id": 609,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 590,
+                  "scope": 611,
                   "src": "773:4:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -746,7 +746,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 587,
+                    "id": 608,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "773:4:1",
@@ -761,7 +761,7 @@
               ],
               "src": "772:6:1"
             },
-            "scope": 609,
+            "scope": 630,
             "src": "682:97:1",
             "stateMutability": "view",
             "superFunction": null,
@@ -770,7 +770,7 @@
           {
             "body": null,
             "documentation": "@notice Cancel reservation for `_tokenId` between `_start` and `_stop`\n @dev All reservations between `_start` and `_stop` are cancelled. `_start` and `_stop` do not guarantee",
-            "id": 601,
+            "id": 622,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -778,15 +778,15 @@
             "name": "cancelAll",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 597,
+              "id": 618,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 592,
+                  "id": 613,
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 601,
+                  "scope": 622,
                   "src": "1043:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -795,7 +795,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 591,
+                    "id": 612,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1043:7:1",
@@ -809,10 +809,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 594,
+                  "id": 615,
                   "name": "_start",
                   "nodeType": "VariableDeclaration",
-                  "scope": 601,
+                  "scope": 622,
                   "src": "1061:14:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -821,7 +821,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 593,
+                    "id": 614,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1061:7:1",
@@ -835,10 +835,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 596,
+                  "id": 617,
                   "name": "_stop",
                   "nodeType": "VariableDeclaration",
-                  "scope": 601,
+                  "scope": 622,
                   "src": "1077:13:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -847,7 +847,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 595,
+                    "id": 616,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1077:7:1",
@@ -864,15 +864,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 600,
+              "id": 621,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 599,
+                  "id": 620,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 601,
+                  "scope": 622,
                   "src": "1108:7:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -881,7 +881,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 598,
+                    "id": 619,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1108:7:1",
@@ -896,7 +896,7 @@
               ],
               "src": "1107:9:1"
             },
-            "scope": 609,
+            "scope": 630,
             "src": "1024:93:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -905,7 +905,7 @@
           {
             "body": null,
             "documentation": "@notice Cancel a single reservation for `_tokenId`",
-            "id": 608,
+            "id": 629,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -913,15 +913,15 @@
             "name": "cancel",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 606,
+              "id": 627,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 603,
+                  "id": 624,
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 608,
+                  "scope": 629,
                   "src": "1194:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -930,7 +930,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 602,
+                    "id": 623,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1194:7:1",
@@ -944,10 +944,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 605,
+                  "id": 626,
                   "name": "_reservationId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 608,
+                  "scope": 629,
                   "src": "1212:22:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -956,7 +956,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 604,
+                    "id": 625,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1212:7:1",
@@ -973,19 +973,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 607,
+              "id": 628,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1242:0:1"
             },
-            "scope": 609,
+            "scope": 630,
             "src": "1178:65:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 629,
+        "scope": 650,
         "src": "173:1072:1"
       },
       {
@@ -994,39 +994,39 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 610,
+              "id": 631,
               "name": "ERC721",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1198,
+              "referencedDeclaration": 1162,
               "src": "1272:6:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC721_$1198",
+                "typeIdentifier": "t_contract$_ERC721_$1162",
                 "typeString": "contract ERC721"
               }
             },
-            "id": 611,
+            "id": 632,
             "nodeType": "InheritanceSpecifier",
             "src": "1272:6:1"
           }
         ],
         "contractDependencies": [
-          853,
-          1171,
-          1191,
-          1198,
-          1320
+          817,
+          1135,
+          1155,
+          1162,
+          1284
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 628,
+        "id": 649,
         "linearizedBaseContracts": [
-          628,
-          1198,
-          1191,
-          1171,
-          1320,
-          853
+          649,
+          1162,
+          1155,
+          1135,
+          1284,
+          817
         ],
         "name": "ERC809Child",
         "nodeType": "ContractDefinition",
@@ -1034,20 +1034,20 @@
           {
             "anonymous": false,
             "documentation": "@dev This emits when a successful reservation is made for accessing any NFT.",
-            "id": 619,
+            "id": 640,
             "name": "Creation",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 618,
+              "id": 639,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 613,
+                  "id": 634,
                   "indexed": true,
                   "name": "_renter",
                   "nodeType": "VariableDeclaration",
-                  "scope": 619,
+                  "scope": 640,
                   "src": "1381:23:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1056,7 +1056,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 612,
+                    "id": 633,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1381:7:1",
@@ -1070,11 +1070,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 615,
+                  "id": 636,
                   "indexed": false,
                   "name": "_calendarId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 619,
+                  "scope": 640,
                   "src": "1406:19:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1083,7 +1083,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 614,
+                    "id": 635,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1406:7:1",
@@ -1097,11 +1097,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 617,
+                  "id": 638,
                   "indexed": false,
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 619,
+                  "scope": 640,
                   "src": "1427:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1110,7 +1110,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 616,
+                    "id": 637,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1427:7:1",
@@ -1130,20 +1130,20 @@
           {
             "anonymous": false,
             "documentation": "@dev This emits when a successful cancellation is made for a reservation.",
-            "id": 627,
+            "id": 648,
             "name": "Cancellation",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 626,
+              "id": 647,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 621,
+                  "id": 642,
                   "indexed": true,
                   "name": "_renter",
                   "nodeType": "VariableDeclaration",
-                  "scope": 627,
+                  "scope": 648,
                   "src": "1548:23:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1152,7 +1152,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 620,
+                    "id": 641,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1548:7:1",
@@ -1166,11 +1166,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 623,
+                  "id": 644,
                   "indexed": false,
                   "name": "_calendarId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 627,
+                  "scope": 648,
                   "src": "1573:19:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1179,7 +1179,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 622,
+                    "id": 643,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1573:7:1",
@@ -1193,11 +1193,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 625,
+                  "id": 646,
                   "indexed": false,
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 627,
+                  "scope": 648,
                   "src": "1594:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1206,7 +1206,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 624,
+                    "id": 645,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1594:7:1",
@@ -1224,7 +1224,7 @@
             "src": "1529:83:1"
           }
         ],
-        "scope": 629,
+        "scope": 650,
         "src": "1248:366:1"
       }
     ],
@@ -1234,17 +1234,17 @@
     "absolutePath": "/Users/saurfang/workspace/meeth/contracts/ERC809.sol",
     "exportedSymbols": {
       "ERC809": [
-        609
+        630
       ],
       "ERC809Child": [
-        628
+        649
       ]
     },
-    "id": 629,
+    "id": 650,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 567,
+        "id": 588,
         "literals": [
           "solidity",
           "^",
@@ -1257,10 +1257,10 @@
       {
         "absolutePath": "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol",
         "file": "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol",
-        "id": 568,
+        "id": 589,
         "nodeType": "ImportDirective",
-        "scope": 629,
-        "sourceUnit": 1199,
+        "scope": 650,
+        "sourceUnit": 1163,
         "src": "26:65:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1271,39 +1271,39 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 569,
+              "id": 590,
               "name": "ERC721",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1198,
+              "referencedDeclaration": 1162,
               "src": "192:6:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC721_$1198",
+                "typeIdentifier": "t_contract$_ERC721_$1162",
                 "typeString": "contract ERC721"
               }
             },
-            "id": 570,
+            "id": 591,
             "nodeType": "InheritanceSpecifier",
             "src": "192:6:1"
           }
         ],
         "contractDependencies": [
-          853,
-          1171,
-          1191,
-          1198,
-          1320
+          817,
+          1135,
+          1155,
+          1162,
+          1284
         ],
         "contractKind": "contract",
         "documentation": "@title ERC809: a standard interface for renting rival non-fungible tokens.",
         "fullyImplemented": false,
-        "id": 609,
+        "id": 630,
         "linearizedBaseContracts": [
-          609,
-          1198,
-          1191,
-          1171,
-          1320,
-          853
+          630,
+          1162,
+          1155,
+          1135,
+          1284,
+          817
         ],
         "name": "ERC809",
         "nodeType": "ContractDefinition",
@@ -1311,7 +1311,7 @@
           {
             "body": null,
             "documentation": "@notice Find the renter of an NFT token as of `_time`\n @dev The renter is who made a reservation on `_tokenId` and the reservation spans over `_time`.",
-            "id": 579,
+            "id": 600,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1319,15 +1319,15 @@
             "name": "renterOf",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 575,
+              "id": 596,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 572,
+                  "id": 593,
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 579,
+                  "scope": 600,
                   "src": "517:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1336,7 +1336,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 571,
+                    "id": 592,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "517:7:1",
@@ -1350,10 +1350,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 574,
+                  "id": 595,
                   "name": "_time",
                   "nodeType": "VariableDeclaration",
-                  "scope": 579,
+                  "scope": 600,
                   "src": "535:13:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1362,7 +1362,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 573,
+                    "id": 594,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "535:7:1",
@@ -1379,15 +1379,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 578,
+              "id": 599,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 577,
+                  "id": 598,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 579,
+                  "scope": 600,
                   "src": "571:7:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1396,7 +1396,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 576,
+                    "id": 597,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "571:7:1",
@@ -1411,7 +1411,7 @@
               ],
               "src": "570:9:1"
             },
-            "scope": 609,
+            "scope": 630,
             "src": "499:81:1",
             "stateMutability": "view",
             "superFunction": null,
@@ -1420,7 +1420,7 @@
           {
             "body": null,
             "documentation": "@notice Query if token `_tokenId` if available to reserve between `_start` and `_stop` time",
-            "id": 590,
+            "id": 611,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -1428,15 +1428,15 @@
             "name": "isAvailable",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 586,
+              "id": 607,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 581,
+                  "id": 602,
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 590,
+                  "scope": 611,
                   "src": "703:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1445,7 +1445,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 580,
+                    "id": 601,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "703:7:1",
@@ -1459,10 +1459,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 583,
+                  "id": 604,
                   "name": "_start",
                   "nodeType": "VariableDeclaration",
-                  "scope": 590,
+                  "scope": 611,
                   "src": "721:14:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1471,7 +1471,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 582,
+                    "id": 603,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "721:7:1",
@@ -1485,10 +1485,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 585,
+                  "id": 606,
                   "name": "_stop",
                   "nodeType": "VariableDeclaration",
-                  "scope": 590,
+                  "scope": 611,
                   "src": "737:13:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1497,7 +1497,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 584,
+                    "id": 605,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "737:7:1",
@@ -1514,15 +1514,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 589,
+              "id": 610,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 588,
+                  "id": 609,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 590,
+                  "scope": 611,
                   "src": "773:4:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1531,7 +1531,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 587,
+                    "id": 608,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "773:4:1",
@@ -1546,7 +1546,7 @@
               ],
               "src": "772:6:1"
             },
-            "scope": 609,
+            "scope": 630,
             "src": "682:97:1",
             "stateMutability": "view",
             "superFunction": null,
@@ -1555,7 +1555,7 @@
           {
             "body": null,
             "documentation": "@notice Cancel reservation for `_tokenId` between `_start` and `_stop`\n @dev All reservations between `_start` and `_stop` are cancelled. `_start` and `_stop` do not guarantee",
-            "id": 601,
+            "id": 622,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1563,15 +1563,15 @@
             "name": "cancelAll",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 597,
+              "id": 618,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 592,
+                  "id": 613,
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 601,
+                  "scope": 622,
                   "src": "1043:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1580,7 +1580,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 591,
+                    "id": 612,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1043:7:1",
@@ -1594,10 +1594,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 594,
+                  "id": 615,
                   "name": "_start",
                   "nodeType": "VariableDeclaration",
-                  "scope": 601,
+                  "scope": 622,
                   "src": "1061:14:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1606,7 +1606,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 593,
+                    "id": 614,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1061:7:1",
@@ -1620,10 +1620,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 596,
+                  "id": 617,
                   "name": "_stop",
                   "nodeType": "VariableDeclaration",
-                  "scope": 601,
+                  "scope": 622,
                   "src": "1077:13:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1632,7 +1632,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 595,
+                    "id": 616,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1077:7:1",
@@ -1649,15 +1649,15 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 600,
+              "id": 621,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 599,
+                  "id": 620,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 601,
+                  "scope": 622,
                   "src": "1108:7:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1666,7 +1666,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 598,
+                    "id": 619,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1108:7:1",
@@ -1681,7 +1681,7 @@
               ],
               "src": "1107:9:1"
             },
-            "scope": 609,
+            "scope": 630,
             "src": "1024:93:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1690,7 +1690,7 @@
           {
             "body": null,
             "documentation": "@notice Cancel a single reservation for `_tokenId`",
-            "id": 608,
+            "id": 629,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1698,15 +1698,15 @@
             "name": "cancel",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 606,
+              "id": 627,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 603,
+                  "id": 624,
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 608,
+                  "scope": 629,
                   "src": "1194:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1715,7 +1715,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 602,
+                    "id": 623,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1194:7:1",
@@ -1729,10 +1729,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 605,
+                  "id": 626,
                   "name": "_reservationId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 608,
+                  "scope": 629,
                   "src": "1212:22:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1741,7 +1741,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 604,
+                    "id": 625,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1212:7:1",
@@ -1758,19 +1758,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 607,
+              "id": 628,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1242:0:1"
             },
-            "scope": 609,
+            "scope": 630,
             "src": "1178:65:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 629,
+        "scope": 650,
         "src": "173:1072:1"
       },
       {
@@ -1779,39 +1779,39 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 610,
+              "id": 631,
               "name": "ERC721",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1198,
+              "referencedDeclaration": 1162,
               "src": "1272:6:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC721_$1198",
+                "typeIdentifier": "t_contract$_ERC721_$1162",
                 "typeString": "contract ERC721"
               }
             },
-            "id": 611,
+            "id": 632,
             "nodeType": "InheritanceSpecifier",
             "src": "1272:6:1"
           }
         ],
         "contractDependencies": [
-          853,
-          1171,
-          1191,
-          1198,
-          1320
+          817,
+          1135,
+          1155,
+          1162,
+          1284
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 628,
+        "id": 649,
         "linearizedBaseContracts": [
-          628,
-          1198,
-          1191,
-          1171,
-          1320,
-          853
+          649,
+          1162,
+          1155,
+          1135,
+          1284,
+          817
         ],
         "name": "ERC809Child",
         "nodeType": "ContractDefinition",
@@ -1819,20 +1819,20 @@
           {
             "anonymous": false,
             "documentation": "@dev This emits when a successful reservation is made for accessing any NFT.",
-            "id": 619,
+            "id": 640,
             "name": "Creation",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 618,
+              "id": 639,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 613,
+                  "id": 634,
                   "indexed": true,
                   "name": "_renter",
                   "nodeType": "VariableDeclaration",
-                  "scope": 619,
+                  "scope": 640,
                   "src": "1381:23:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1841,7 +1841,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 612,
+                    "id": 633,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1381:7:1",
@@ -1855,11 +1855,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 615,
+                  "id": 636,
                   "indexed": false,
                   "name": "_calendarId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 619,
+                  "scope": 640,
                   "src": "1406:19:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1868,7 +1868,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 614,
+                    "id": 635,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1406:7:1",
@@ -1882,11 +1882,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 617,
+                  "id": 638,
                   "indexed": false,
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 619,
+                  "scope": 640,
                   "src": "1427:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1895,7 +1895,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 616,
+                    "id": 637,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1427:7:1",
@@ -1915,20 +1915,20 @@
           {
             "anonymous": false,
             "documentation": "@dev This emits when a successful cancellation is made for a reservation.",
-            "id": 627,
+            "id": 648,
             "name": "Cancellation",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 626,
+              "id": 647,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 621,
+                  "id": 642,
                   "indexed": true,
                   "name": "_renter",
                   "nodeType": "VariableDeclaration",
-                  "scope": 627,
+                  "scope": 648,
                   "src": "1548:23:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1937,7 +1937,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 620,
+                    "id": 641,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1548:7:1",
@@ -1951,11 +1951,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 623,
+                  "id": 644,
                   "indexed": false,
                   "name": "_calendarId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 627,
+                  "scope": 648,
                   "src": "1573:19:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1964,7 +1964,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 622,
+                    "id": 643,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1573:7:1",
@@ -1978,11 +1978,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 625,
+                  "id": 646,
                   "indexed": false,
                   "name": "_tokenId",
                   "nodeType": "VariableDeclaration",
-                  "scope": 627,
+                  "scope": 648,
                   "src": "1594:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1991,7 +1991,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 624,
+                    "id": 645,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1594:7:1",
@@ -2009,7 +2009,7 @@
             "src": "1529:83:1"
           }
         ],
-        "scope": 629,
+        "scope": 650,
         "src": "1248:366:1"
       }
     ],
@@ -2021,5 +2021,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-08-27T04:32:03.832Z"
+  "updatedAt": "2018-08-28T04:02:44.275Z"
 }

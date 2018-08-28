@@ -19,6 +19,12 @@ contract("Calendar", ([owner, renter1, renter2]) => {
       calendar.reserve(0, 2000, 1000).should.be.rejectedWith(EVMRevert);
     });
 
+    it("limits the reservation duration to 8 hours", async () => {
+      const limit = 8 * 3600 * 1000;
+      calendar.reserve(0, 0, limit).should.be.fulfilled; // eslint-disable-line no-unused-expressions
+      calendar.reserve(0, 0, limit + 1).should.be.rejectedWith(EVMRevert);
+    });
+
     it("maintains ownership of token to actual owner", async () => {
       (await calendar.ownerOf(0)).should.equal(owner);
     });
