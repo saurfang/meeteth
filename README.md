@@ -3,17 +3,12 @@
 [![Build Status](https://travis-ci.org/saurfang/meeteth.svg?branch=master)](https://travis-ci.org/saurfang/meeteth)
 [![Coverage Status](https://coveralls.io/repos/github/saurfang/meeteth/badge.svg?branch=master)](https://coveralls.io/github/saurfang/meeteth?branch=master)
 
-Proof of Concept of ERC809, the standard for rentable non-fungible tokens. The ERC809 token itself represents an ephemeral access to a tokenized (non-)fungible asset. Such asset may be a travel accommodation, some professional service e.g. doctor, or even the right of road.
+Proof of Concept of [ERC809](https://github.com/ethereum/EIPs/issues/809)/[ERC1201](https://github.com/ethereum/EIPs/issues/1201), the standard for rentable non-fungible tokens. The ERC809 token itself represents an ephemeral access to a tokenized (non-)fungible asset. Such asset may be a travel accommodation, some professional service e.g. doctor, or even the right of road.
 
-MeetETH is a simple scheduling Dapp that allows user to create tokenized calendar bound to ethereum account and invite other users to create tokenized reservations on such calendars. While the interaction may look simple, it has many exciting use cases.
+MeetETH is a simple scheduling Dapp that allows user to create tokenized calendar bound to ethereum account and invite other users to create tokenized reservations on such calendars. While the interaction may look simple, it can be generalized to many exciting use cases. At its core, this is about reserving an ephemeral access to a non-rival goods.
 
-**Human to Human** transferrable reservation: doctor appointments are often made weeks in advance in U.S. and people often have to choose between expensive emergency care and toughing it out while waiting the appointment to come. A lot of doctor office employs receptionist whose worst part of the job is calling patients to juggle appointments based on patient's schedule and preferences.
-A tokenized reservation would allow patients to easily swap reservation time and guardrails can be set up in smart contract to prevent squatting and scalping. Furthermore, as ERC809 inherits ERC721, the token can be traded using common protocol such as 0x which dramatically reduces work and improve liquidity.
-Lastly, doctors with common practice area can participate in a TCR where reservations can be more efficiently arranged among doctors who have similar experience, reputation, and expertise.
-
-**Human to Machine** reservation: it is not difficult to see how such calendar can belong to other self operating smart contracts as well. For example, one can reserve a self-driving car for a multi-day camping trip. One may also reserve a cloud computing resource at a pre-agreed price akin to AWS reserved instances.
-
-**Machine to Machine** reservation: this naturally extends to machine to machine as well. A self-driving autonomous vehicle can manage its own wallet and bids for rides. When providing the ride, it communicates with traffic management smart contract to bid and reserve the right of road at an intersection. When it does its route planning, it can precisely calculate the time it enters and leaves each intersection, and can further trade the right of road as traffic condition changes.
+Learn more about the potential applications of ERC809/1201 token standard as well as the technical smart contract architecture at: [ERC809/1201: Tokenizing Non-fungible Access
+](https://medium.com/coinmonks/erc809-1201-tokenizing-non-fungible-access-abdc5018c49)
 
 ## Development
 
