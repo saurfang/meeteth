@@ -7,10 +7,8 @@ import thunk from 'redux-thunk'
 // state
 import { Provider } from 'react-redux'
 import { DrizzleProvider } from 'drizzle-react'
-import drizzleOptions from 'drizzleOptions'
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import { drizzleReducers, generateContractsInitialState } from 'drizzle'
-import reducers from 'state/reducers'
 
 // routing
 import createHistory from 'history/createBrowserHistory'
@@ -20,14 +18,16 @@ import {
   routerMiddleware,
 } from 'react-router-redux'
 
-import rootSaga from 'rootSaga'
 import createSagaMiddleware from 'redux-saga'
 
-import 'index.css'
+import './index.css'
 import { injectGlobal } from 'emotion'
-import { tags } from 'stylesheet/copy'
-import App from 'App'
-import registerServiceWorker from 'registerServiceWorker'
+import rootSaga from './rootSaga'
+import reducers from './state/reducers'
+import drizzleOptions from './drizzleOptions'
+import { tags } from './stylesheet/copy'
+import App from './App'
+import registerServiceWorker from './registerServiceWorker'
 
 injectGlobal(tags)
 
