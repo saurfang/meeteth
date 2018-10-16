@@ -1,4 +1,3 @@
-import { Row, Col } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 import { css } from "emotion";
